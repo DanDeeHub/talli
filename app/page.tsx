@@ -1,4 +1,5 @@
 import Sidebar from "./Sidebar";
+import { RocketIcon } from "./icons";
 
 export default function Home() {
   return (
@@ -14,9 +15,7 @@ export default function Home() {
         </p>
         <div className="flex gap-4">
           <button className="flex items-center gap-2 rounded-md bg-accent px-6 py-3 font-medium text-white transition-colors hover:opacity-90">
-            <span className="material-symbols-outlined text-[20px] leading-none">
-              rocket_launch
-            </span>
+            <RocketIcon className="h-5 w-5" />
             Get Started
           </button>
           <button className="rounded-md border border-neutral-300 px-6 py-3 font-medium text-primary transition-colors hover:bg-neutral-100">

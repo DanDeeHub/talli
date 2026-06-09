@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   DashboardIcon,
@@ -8,88 +8,146 @@ import {
   WarehouseIcon,
   SuppliersIcon,
   LogoutIcon,
-  MenuOpenIcon,
+  CloseIcon,
 } from "./icons";
 
-const nav = [
+type IconType = React.ComponentType<{ className?: string }>;
+
+const nav: { label: string; Icon: IconType }[] = [
   { label: "Dashboard", Icon: DashboardIcon },
   { label: "Inventory", Icon: InventoryIcon },
   { label: "Warehouse", Icon: WarehouseIcon },
   { label: "Suppliers", Icon: SuppliersIcon },
 ];
 
-export default function Sidebar() {
-  const [collapsed, setCollapsed] = useState(true);
+const itemClass =
+  "flex h-10 items-center gap-3 rounded-md px-2.5 text-sm text-white/80 transition-colors hover:bg-primary/60 hover:text-white";
 
-  const itemClass =
-    "flex h-10 items-center gap-3 rounded-md px-2.5 text-sm text-white/80 transition-colors hover:bg-primary/60 hover:text-white";
+function LogoMark({ className }: { className?: string }) {
+  return (
+    <Image
+      src="/logo-mark.png"
+      alt="Talli logo"
+      width={32}
+      height={32}
+      priority
+      className={`max-w-none shrink-0 rounded ${className ?? ""}`}
+    />
+  );
+}
+
+function SidebarItem({
+  Icon,
+  label,
+  expanded,
+}: {
+  Icon: IconType;
+  label: string;
+  expanded: boolean;
+}) {
+  return (
+    <a href="#" title={expanded ? undefined : label} className={itemClass}>
+      <Icon className="h-5 w-5 shrink-0" />
+      {expanded && label}
+    </a>
+  );
+}
+
+export default function Sidebar() {
+  const [collapsed, setCollapsed] = useState(true); // desktop rail state
+  const [mobileOpen, setMobileOpen] = useState(false); // mobile drawer state
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(max-width: 767px)");
+    const apply = () => {
+      setIsMobile(mql.matches);
+      if (!mql.matches) setMobileOpen(false); // reset drawer when leaving mobile
+    };
+    apply();
+    mql.addEventListener("change", apply);
+    return () => mql.removeEventListener("change", apply);
+  }, []);
+
+  // Full layout (labels visible): always on mobile, or when expanded on desktop.
+  const expanded = isMobile || !collapsed;
+
+  const asideClass = `flex flex-col bg-[#2e2e2e] text-white transition-all duration-200 ${
+    isMobile
+      ? `fixed inset-y-0 left-0 z-50 w-64 ${
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
+        }`
+      : collapsed
+        ? "w-16"
+        : "w-52"
+  }`;
 
   return (
-    <aside
-      className={`flex flex-col bg-[#2e2e2e] text-white transition-all duration-200 ${
-        collapsed ? "w-16" : "w-52"
-      }`}
-    >
-      <div className="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-5">
-        {collapsed ? (
-          <button
-            onClick={() => setCollapsed(false)}
-            title="Expand"
-            className="flex cursor-pointer items-center justify-center rounded"
-          >
-            <Image
-              src="/logo-mark.png"
-              alt="Talli logo"
-              width={32}
-              height={32}
-              priority
-              className="h-8 w-8 max-w-none shrink-0 rounded transition duration-200 hover:brightness-0 hover:invert"
-            />
-          </button>
-        ) : (
-          <>
-            <div className="flex items-center gap-3">
-              <Image
-                src="/logo-mark.png"
-                alt="Talli logo"
-                width={32}
-                height={32}
-                priority
-                className="h-8 w-8 max-w-none shrink-0 rounded brightness-0 invert transition duration-200"
-              />
-              <span className="text-xl font-semibold tracking-tight">Talli</span>
-            </div>
+    <>
+      {/* Mobile: the logo button opens the drawer */}
+      {isMobile && !mobileOpen && (
+        <button
+          onClick={() => setMobileOpen(true)}
+          title="Open menu"
+          aria-label="Open menu"
+          className="fixed left-4 top-4 z-30 flex cursor-pointer items-center justify-center rounded-md bg-[#2e2e2e] p-2 shadow-md"
+        >
+          <LogoMark className="h-7 w-7" />
+        </button>
+      )}
+
+      {/* Mobile backdrop */}
+      {isMobile && mobileOpen && (
+        <div
+          onClick={() => setMobileOpen(false)}
+          className="fixed inset-0 z-40 bg-black/50"
+          aria-hidden="true"
+        />
+      )}
+
+      <aside className={asideClass}>
+        <div className="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-5">
+          {expanded ? (
+            <>
+              <div className="flex items-center gap-3">
+                <LogoMark className="h-8 w-8 brightness-0 invert" />
+                <span className="text-xl font-semibold tracking-tight">
+                  Talli
+                </span>
+              </div>
+              <button
+                onClick={() =>
+                  isMobile ? setMobileOpen(false) : setCollapsed(true)
+                }
+                title={isMobile ? "Close menu" : "Collapse"}
+                aria-label={isMobile ? "Close menu" : "Collapse"}
+                className="flex cursor-pointer items-center justify-center rounded-md p-1 text-white/80 transition-colors hover:bg-primary/60 hover:text-white"
+              >
+                <CloseIcon className="h-5 w-5" />
+              </button>
+            </>
+          ) : (
             <button
-              onClick={() => setCollapsed(true)}
-              title="Collapse"
-              className="flex cursor-pointer items-center justify-center rounded-md p-1 text-white/80 transition-colors hover:bg-primary/60 hover:text-white"
+              onClick={() => setCollapsed(false)}
+              title="Expand"
+              aria-label="Expand"
+              className="flex cursor-pointer items-center justify-center rounded"
             >
-              <MenuOpenIcon className="h-5 w-5" />
+              <LogoMark className="h-8 w-8 transition duration-200 hover:brightness-0 hover:invert" />
             </button>
-          </>
-        )}
-      </div>
+          )}
+        </div>
 
-      <nav className="flex flex-1 flex-col gap-1 px-3 py-4">
-        {nav.map(({ label, Icon }) => (
-          <a
-            key={label}
-            href="#"
-            title={collapsed ? label : undefined}
-            className={itemClass}
-          >
-            <Icon className="h-5 w-5 shrink-0" />
-            {!collapsed && label}
-          </a>
-        ))}
-      </nav>
+        <nav className="flex flex-1 flex-col gap-1 px-3 py-4">
+          {nav.map((item) => (
+            <SidebarItem key={item.label} {...item} expanded={expanded} />
+          ))}
+        </nav>
 
-      <div className="border-t border-white/10 px-3 py-4">
-        <a href="#" title={collapsed ? "Logout" : undefined} className={itemClass}>
-          <LogoutIcon className="h-5 w-5 shrink-0" />
-          {!collapsed && "Logout"}
-        </a>
-      </div>
-    </aside>
+        <div className="border-t border-white/10 px-3 py-4">
+          <SidebarItem Icon={LogoutIcon} label="Logout" expanded={expanded} />
+        </div>
+      </aside>
+    </>
   );
 }

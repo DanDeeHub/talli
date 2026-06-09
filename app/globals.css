@@ -4,7 +4,7 @@
   --color-primary: #ba5656; /* Brand Red */
   --color-secondary: #ffffff; /* White */
   --color-accent: #007bff; /* Electric Blue */
-  --font-sans: var(--font-inter), Arial, Helvetica, sans-serif;
+  --font-sans: var(--font-inter), sans-serif;
 }
 
 html,
