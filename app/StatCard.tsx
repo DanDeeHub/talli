@@ -50,7 +50,7 @@ export default function StatCard({
   const trendColor = up ? "text-emerald-600" : "text-red-500";
 
   return (
-    <div className="w-full rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+    <div className="flex h-full w-full flex-col rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
       <div className="flex items-start justify-between">
         <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${t.iconBox}`}>
           <Icon className="h-6 w-6" />
@@ -61,22 +61,29 @@ export default function StatCard({
         </span>
       </div>
 
-      <p className="mt-4 text-xs font-medium uppercase tracking-wide text-neutral-500">
+      <p className="mt-4 flex min-h-8 items-start text-xs font-medium uppercase leading-4 tracking-wide text-neutral-500">
         {label}
       </p>
-      <p className="mt-1 text-3xl font-semibold tracking-tight text-neutral-900">
+      <p className="mt-1 text-2xl font-semibold tracking-tight text-neutral-900">
         {value}
       </p>
 
-      <div className="mt-5 flex h-12 items-end gap-1.5">
+      <div className="mt-auto flex h-12 items-end gap-1.5 pt-5">
         {series.map((h, i) => (
           <div
             key={i}
-            style={{ height: `${h}%` }}
-            className={`flex-1 rounded-sm ${
-              i === series.length - 1 ? t.barLast : t.bar
-            }`}
-          />
+            className="group relative flex h-full flex-1 items-end"
+          >
+            <div
+              style={{ height: `${h}%` }}
+              className={`w-full cursor-pointer rounded-sm transition-opacity group-hover:opacity-70 ${
+                i === series.length - 1 ? t.barLast : t.bar
+              }`}
+            />
+            <div className="pointer-events-none absolute bottom-full left-1/2 mb-1.5 -translate-x-1/2 whitespace-nowrap rounded-md bg-neutral-900 px-2 py-1 text-[10px] font-semibold text-white opacity-0 shadow-lg transition-opacity duration-150 group-hover:opacity-100">
+              {h}
+            </div>
+          </div>
         ))}
       </div>
     </div>

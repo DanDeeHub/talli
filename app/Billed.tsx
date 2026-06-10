@@ -74,7 +74,7 @@ export default function Billed() {
             Bill Performance
           </h2>
           <p className="mt-0.5 text-sm text-neutral-500">{subtitle}</p>
-          <p className="mt-3 text-3xl font-semibold tracking-tight text-neutral-900">
+          <p className="mt-3 text-2xl font-semibold tracking-tight text-neutral-900">
             {total}
           </p>
         </div>
@@ -120,7 +120,7 @@ export default function Billed() {
             <div
               key={i}
               style={{ left: `${fx * 100}%`, top: `${fy * 100}%` }}
-              className="group absolute flex h-6 w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center"
+              className="group absolute flex h-6 w-6 -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center"
             >
               <span className="h-2.5 w-2.5 rounded-full border-2 border-white bg-primary shadow-sm transition-transform group-hover:scale-125" />
               <div className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-neutral-900 px-2.5 py-1.5 text-center opacity-0 shadow-lg transition-opacity duration-150 group-hover:opacity-100">

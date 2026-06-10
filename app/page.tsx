@@ -28,9 +28,9 @@ export default function Home() {
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
         <Header title={active} onMenuClick={() => setMobileOpen(true)} />
 
-        <main className="flex-1 overflow-y-auto bg-[#fbf9f8] p-6 sm:p-8">
+        <main className="flex flex-1 flex-col overflow-y-auto bg-[#fbf9f8] p-6 sm:p-8">
           {active === "Dashboard" ? (
-            <div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-4">
               <StatCard
                 Icon={PaymentsIcon}
                 label="Total Value"
@@ -55,7 +55,9 @@ export default function Home() {
                 series={[35, 42, 38, 55, 60, 72, 88]}
                 tone="olive"
               />
-              <MessageBoard />
+              <div className="self-stretch">
+                <MessageBoard />
+              </div>
 
               <div className="self-stretch sm:col-span-2 lg:col-span-3">
                 <Billed />
