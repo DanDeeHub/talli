@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
-import { RocketIcon } from "./icons";
+import StatCard from "./StatCard";
+import { PaymentsIcon, PendingActionsIcon, InventoryIcon } from "./icons";
 
 export default function Home() {
   const [active, setActive] = useState("Dashboard");
@@ -21,22 +22,37 @@ export default function Home() {
       <div className="flex min-w-0 flex-1 flex-col">
         <Header title={active} onMenuClick={() => setMobileOpen(true)} />
 
-        <main className="flex flex-1 flex-col items-center justify-center gap-6 bg-secondary p-8 text-center">
-          <h1 className="max-w-2xl text-3xl font-semibold tracking-tight text-primary sm:text-4xl">
-            Straightforward tools you can trust
-          </h1>
-          <p className="max-w-md text-lg text-neutral-600">
-            Everything your business needs, nothing it doesn&apos;t.
-          </p>
-          <div className="flex flex-col gap-4 sm:flex-row">
-            <button className="flex items-center justify-center gap-2 rounded-md bg-accent px-6 py-3 font-medium text-white transition-colors hover:opacity-90">
-              <RocketIcon className="h-5 w-5" />
-              Get Started
-            </button>
-            <button className="rounded-md border border-neutral-300 px-6 py-3 font-medium text-primary transition-colors hover:bg-neutral-100">
-              Learn More
-            </button>
-          </div>
+        <main className="flex-1 overflow-y-auto bg-[#fbf9f8] p-6 sm:p-8">
+          {active === "Dashboard" ? (
+            <div className="flex flex-wrap gap-6">
+              <StatCard
+                Icon={PaymentsIcon}
+                label="Total Value"
+                value="$142,384.00"
+                change={12.5}
+                series={[42, 55, 48, 63, 58, 75, 90]}
+                tone="rose"
+              />
+              <StatCard
+                Icon={PendingActionsIcon}
+                label="Pending Purchase Orders"
+                value="64"
+                change={-2.1}
+                series={[55, 48, 62, 45, 70, 80, 72]}
+                tone="neutral"
+              />
+              <StatCard
+                Icon={InventoryIcon}
+                label="Stocks"
+                value="1,280"
+                change={8.3}
+                series={[35, 42, 38, 55, 60, 72, 88]}
+                tone="olive"
+              />
+            </div>
+          ) : (
+            <p className="text-neutral-500">{active} content goes here.</p>
+          )}
         </main>
       </div>
     </div>

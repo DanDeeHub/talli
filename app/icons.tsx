@@ -84,6 +84,38 @@ export function PersonIcon(props: IconProps) {
   );
 }
 
+export function PaymentsIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M19 14V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2m-2 0H3V6h14zm-7-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3m13 0v11c0 1.1-.9 2-2 2H4v-2h17V7z" />
+    </Svg>
+  );
+}
+
+export function TrendingUpIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="m16 6 2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z" />
+    </Svg>
+  );
+}
+
+export function PendingActionsIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M17 12c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5m1.65 7.35L16.5 17.2V14h1v2.79l1.85 1.85zM18 3h-3.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H6c-1.1 0-2 .9-2 2v15c0 1.1.9 2 2 2h6.11c-.59-.57-1.07-1.25-1.42-2H6V5h2v3h8V5h2v5.08c.71.1 1.38.31 2 .6V5c0-1.1-.9-2-2-2m-6 2c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1" />
+    </Svg>
+  );
+}
+
+export function TrendingDownIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="m16 18 2.29-2.29-4.88-4.88-4 4L2 7.41 3.41 6l6 6 4-4 6.3 6.29L22 12v6z" />
+    </Svg>
+  );
+}
+
 export function RocketIcon(props: IconProps) {
   return (
     <Svg {...props}>
