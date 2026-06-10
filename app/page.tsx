@@ -7,13 +7,19 @@ import { RocketIcon } from "./icons";
 
 export default function Home() {
   const [active, setActive] = useState("Dashboard");
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
     <div className="flex flex-1">
-      <Sidebar active={active} onSelect={setActive} />
+      <Sidebar
+        active={active}
+        onSelect={setActive}
+        mobileOpen={mobileOpen}
+        onMobileOpenChange={setMobileOpen}
+      />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <Header title={active} />
+        <Header title={active} onMenuClick={() => setMobileOpen(true)} />
 
         <main className="flex flex-1 flex-col items-center justify-center gap-6 bg-secondary p-8 text-center">
           <h1 className="max-w-2xl text-3xl font-semibold tracking-tight text-primary sm:text-4xl">

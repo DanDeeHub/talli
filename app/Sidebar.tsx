@@ -67,24 +67,27 @@ function SidebarItem({
 export default function Sidebar({
   active,
   onSelect,
+  mobileOpen,
+  onMobileOpenChange,
 }: {
   active: string;
   onSelect: (label: string) => void;
+  mobileOpen: boolean;
+  onMobileOpenChange: (open: boolean) => void;
 }) {
   const [collapsed, setCollapsed] = useState(true); // desktop rail state
-  const [mobileOpen, setMobileOpen] = useState(false); // mobile drawer state
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const mql = window.matchMedia("(max-width: 767px)");
     const apply = () => {
       setIsMobile(mql.matches);
-      if (!mql.matches) setMobileOpen(false); // reset drawer when leaving mobile
+      if (!mql.matches) onMobileOpenChange(false); // reset drawer when leaving mobile
     };
     apply();
     mql.addEventListener("change", apply);
     return () => mql.removeEventListener("change", apply);
-  }, []);
+  }, [onMobileOpenChange]);
 
   // Full layout (labels visible): always on mobile, or when expanded on desktop.
   const expanded = isMobile || !collapsed;
@@ -101,29 +104,17 @@ export default function Sidebar({
 
   return (
     <>
-      {/* Mobile: the logo button opens the drawer */}
-      {isMobile && !mobileOpen && (
-        <button
-          onClick={() => setMobileOpen(true)}
-          title="Open menu"
-          aria-label="Open menu"
-          className="fixed left-4 top-4 z-30 flex cursor-pointer items-center justify-center rounded-md bg-[#2e2e2e] p-2 shadow-md"
-        >
-          <LogoMark className="h-7 w-7" />
-        </button>
-      )}
-
       {/* Mobile backdrop */}
       {isMobile && mobileOpen && (
         <div
-          onClick={() => setMobileOpen(false)}
+          onClick={() => onMobileOpenChange(false)}
           className="fixed inset-0 z-40 bg-black/50"
           aria-hidden="true"
         />
       )}
 
       <aside className={asideClass}>
-        <div className="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-5">
+        <div className="flex h-16 items-center justify-between gap-3 border-b border-white/10 px-4">
           {expanded ? (
             <>
               <div className="flex items-center gap-3">
@@ -134,7 +125,7 @@ export default function Sidebar({
               </div>
               <button
                 onClick={() =>
-                  isMobile ? setMobileOpen(false) : setCollapsed(true)
+                  isMobile ? onMobileOpenChange(false) : setCollapsed(true)
                 }
                 title={isMobile ? "Close menu" : "Collapse"}
                 aria-label={isMobile ? "Close menu" : "Collapse"}
@@ -164,7 +155,7 @@ export default function Sidebar({
               active={item.label === active}
               onClick={() => {
                 onSelect(item.label);
-                setMobileOpen(false);
+                onMobileOpenChange(false);
               }}
             />
           ))}
