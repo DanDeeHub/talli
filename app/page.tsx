@@ -9,6 +9,7 @@ import MessageBoard from "./MessageBoard";
 import Billed from "./Billed";
 import RecentOrders from "./RecentOrders";
 import InventoryAlerts from "./InventoryAlerts";
+import Footer from "./Footer";
 import { PaymentsIcon, PendingActionsIcon, InventoryIcon } from "./icons";
 
 export default function Home() {
@@ -16,7 +17,7 @@ export default function Home() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <div className="flex flex-1">
+    <div className="flex min-h-0 flex-1">
       <Sidebar
         active={active}
         onSelect={setActive}
@@ -24,7 +25,7 @@ export default function Home() {
         onMobileOpenChange={setMobileOpen}
       />
 
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
         <Header title={active} onMenuClick={() => setMobileOpen(true)} />
 
         <main className="flex-1 overflow-y-auto bg-[#fbf9f8] p-6 sm:p-8">
@@ -73,6 +74,8 @@ export default function Home() {
           ) : (
             <p className="text-neutral-500">{active} content goes here.</p>
           )}
+
+          <Footer />
         </main>
       </div>
     </div>
