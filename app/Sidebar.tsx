@@ -21,7 +21,7 @@ const nav: { label: string; Icon: IconType }[] = [
 ];
 
 const itemClass =
-  "flex h-10 items-center gap-3 rounded-md px-2.5 text-sm text-white/80 transition-colors hover:bg-primary/60 hover:text-white";
+  "flex h-10 w-full cursor-pointer items-center gap-3 rounded-md px-2.5 text-sm transition-colors hover:bg-primary/60 hover:text-white";
 
 function LogoMark({ className }: { className?: string }) {
   return (
@@ -40,20 +40,37 @@ function SidebarItem({
   Icon,
   label,
   expanded,
+  active,
+  onClick,
 }: {
   Icon: IconType;
   label: string;
   expanded: boolean;
+  active?: boolean;
+  onClick?: () => void;
 }) {
   return (
-    <a href="#" title={expanded ? undefined : label} className={itemClass}>
+    <button
+      type="button"
+      onClick={onClick}
+      title={expanded ? undefined : label}
+      className={`${itemClass} ${
+        active ? "bg-primary/60 text-white" : "text-white/80"
+      }`}
+    >
       <Icon className="h-5 w-5 shrink-0" />
       {expanded && label}
-    </a>
+    </button>
   );
 }
 
-export default function Sidebar() {
+export default function Sidebar({
+  active,
+  onSelect,
+}: {
+  active: string;
+  onSelect: (label: string) => void;
+}) {
   const [collapsed, setCollapsed] = useState(true); // desktop rail state
   const [mobileOpen, setMobileOpen] = useState(false); // mobile drawer state
   const [isMobile, setIsMobile] = useState(false);
@@ -140,7 +157,16 @@ export default function Sidebar() {
 
         <nav className="flex flex-1 flex-col gap-1 px-3 py-4">
           {nav.map((item) => (
-            <SidebarItem key={item.label} {...item} expanded={expanded} />
+            <SidebarItem
+              key={item.label}
+              {...item}
+              expanded={expanded}
+              active={item.label === active}
+              onClick={() => {
+                onSelect(item.label);
+                setMobileOpen(false);
+              }}
+            />
           ))}
         </nav>
 
