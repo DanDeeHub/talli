@@ -4,6 +4,11 @@ import { useState } from "react";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
 import StatCard from "./StatCard";
+import QuickActions from "./QuickActions";
+import MessageBoard from "./MessageBoard";
+import Billed from "./Billed";
+import RecentOrders from "./RecentOrders";
+import InventoryAlerts from "./InventoryAlerts";
 import { PaymentsIcon, PendingActionsIcon, InventoryIcon } from "./icons";
 
 export default function Home() {
@@ -24,11 +29,11 @@ export default function Home() {
 
         <main className="flex-1 overflow-y-auto bg-[#fbf9f8] p-6 sm:p-8">
           {active === "Dashboard" ? (
-            <div className="flex flex-wrap gap-6">
+            <div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2 lg:grid-cols-4">
               <StatCard
                 Icon={PaymentsIcon}
                 label="Total Value"
-                value="$142,384.00"
+                value="₱142,384.00"
                 change={12.5}
                 series={[42, 55, 48, 63, 58, 75, 90]}
                 tone="rose"
@@ -49,6 +54,21 @@ export default function Home() {
                 series={[35, 42, 38, 55, 60, 72, 88]}
                 tone="olive"
               />
+              <MessageBoard />
+
+              <div className="self-stretch sm:col-span-2 lg:col-span-3">
+                <Billed />
+              </div>
+              <div className="self-stretch sm:col-span-2 lg:col-span-1">
+                <QuickActions />
+              </div>
+
+              <div className="self-stretch sm:col-span-2 lg:col-span-2">
+                <RecentOrders />
+              </div>
+              <div className="self-stretch sm:col-span-2 lg:col-span-2">
+                <InventoryAlerts />
+              </div>
             </div>
           ) : (
             <p className="text-neutral-500">{active} content goes here.</p>

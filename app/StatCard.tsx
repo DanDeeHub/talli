@@ -2,7 +2,7 @@ import { TrendingUpIcon, TrendingDownIcon } from "./icons";
 
 type IconType = React.ComponentType<{ className?: string }>;
 
-type ToneKey = "accent" | "neutral" | "olive" | "rose";
+type ToneKey = "accent" | "neutral" | "olive" | "rose" | "steel";
 type Tone = { iconBox: string; bar: string; barLast: string };
 
 const tones: Record<ToneKey, Tone> = {
@@ -21,6 +21,11 @@ const tones: Record<ToneKey, Tone> = {
     iconBox: "bg-[#f5e7ee] text-[#a6516f]",
     bar: "bg-[#f3e2ea]",
     barLast: "bg-[#a6516f]",
+  },
+  steel: {
+    iconBox: "bg-[#e4edf1] text-[#4d7d94]",
+    bar: "bg-[#e0eaf0]",
+    barLast: "bg-[#4d7d94]",
   },
 };
 
@@ -45,7 +50,7 @@ export default function StatCard({
   const trendColor = up ? "text-emerald-600" : "text-red-500";
 
   return (
-    <div className="w-full max-w-xs rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
+    <div className="w-full rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
       <div className="flex items-start justify-between">
         <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${t.iconBox}`}>
           <Icon className="h-6 w-6" />

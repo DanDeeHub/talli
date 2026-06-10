@@ -116,6 +116,30 @@ export function TrendingDownIcon(props: IconProps) {
   );
 }
 
+export function ReceiptIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M18 17H6v-2h12zm0-4H6v-2h12zm0-4H6V7h12zM3 22l1.5-1.5L6 22l1.5-1.5L9 22l1.5-1.5L12 22l1.5-1.5L15 22l1.5-1.5L18 22l1.5-1.5L21 22V2l-1.5 1.5L18 2l-1.5 1.5L15 2l-1.5 1.5L12 2l-1.5 1.5L9 2 7.5 3.5 6 2 4.5 3.5 3 2z" />
+    </Svg>
+  );
+}
+
+export function AddBoxIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4z" />
+    </Svg>
+  );
+}
+
+export function PersonAddIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4m-9-1V8H4v3H1v2h3v3h2v-3h3v-2zm9 3c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4" />
+    </Svg>
+  );
+}
+
 export function RocketIcon(props: IconProps) {
   return (
     <Svg {...props}>
