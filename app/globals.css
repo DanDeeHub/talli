@@ -14,3 +14,42 @@ body {
   color-scheme: light;
   font-family: var(--font-sans);
 }
+
+/* Ambient, slowly drifting background blobs (landing page) */
+@keyframes blob-a {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(26px, -30px) scale(1.08);
+  }
+  66% {
+    transform: translate(-20px, 18px) scale(0.95);
+  }
+}
+
+@keyframes blob-b {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-28px, -24px) scale(1.12);
+  }
+}
+
+.blob-a {
+  animation: blob-a 18s ease-in-out infinite;
+}
+
+.blob-b {
+  animation: blob-b 22s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blob-a,
+  .blob-b {
+    animation: none;
+  }
+}
