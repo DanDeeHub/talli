@@ -1,4 +1,4 @@
-type Status = "Delivered" | "Processing" | "Pending";
+type Status = "Paid" | "Pending";
 
 type Order = {
   id: string;
@@ -8,16 +8,15 @@ type Order = {
 };
 
 const statusStyles: Record<Status, string> = {
-  Delivered: "bg-[#eef2dd] text-[#7d8f3c]",
-  Processing: "bg-[#e4edf1] text-[#4d7d94]",
+  Paid: "bg-[#eef2dd] text-[#7d8f3c]",
   Pending: "bg-[#f5e7ee] text-[#a6516f]",
 };
 
 const orders: Order[] = [
-  { id: "PO-1042", supplier: "Acme Supplies", amount: "₱24,500", status: "Delivered" },
-  { id: "PO-1041", supplier: "Northwind Traders", amount: "₱12,180", status: "Processing" },
+  { id: "PO-1042", supplier: "Acme Supplies", amount: "₱24,500", status: "Paid" },
+  { id: "PO-1041", supplier: "Northwind Traders", amount: "₱12,180", status: "Pending" },
   { id: "PO-1040", supplier: "Globex Corp", amount: "₱8,940", status: "Pending" },
-  { id: "PO-1039", supplier: "Umbrella Foods", amount: "₱31,720", status: "Delivered" },
+  { id: "PO-1039", supplier: "Umbrella Foods", amount: "₱31,720", status: "Paid" },
 ];
 
 export default function RecentOrders() {

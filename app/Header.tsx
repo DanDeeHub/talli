@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { NotificationsIcon, PersonIcon } from "./icons";
+import { PersonIcon } from "./icons";
+import Activity from "./Activity";
 
 export default function Header({
   title,
@@ -30,13 +31,7 @@ export default function Header({
       </div>
 
       <div className="flex items-center gap-4">
-        <button
-          title="Notifications"
-          aria-label="Notifications"
-          className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-neutral-600 transition-colors hover:bg-neutral-100"
-        >
-          <NotificationsIcon className="h-5 w-5" />
-        </button>
+        <Activity />
 
         <div className="h-8 w-px bg-neutral-200" />
 
