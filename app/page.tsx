@@ -29,7 +29,7 @@ export default function Home() {
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
         <Header title={active} onMenuClick={() => setMobileOpen(true)} />
 
-        <main className="flex flex-1 flex-col overflow-y-auto bg-[#fbf9f8] p-6 sm:p-8">
+        <main className="flex flex-1 flex-col overflow-y-auto [scrollbar-gutter:stable] bg-[#fbf9f8] p-6 sm:p-8">
           {active === "Dashboard" ? (
             <div className="flex flex-col gap-6">
               {/* Stat cards */}

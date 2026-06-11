@@ -3,14 +3,22 @@
 import { useEffect, useState } from "react";
 import {
   SearchIcon,
-  InventoryIcon,
+  GroceryIcon,
   PlusIcon,
-  DeleteIcon,
+  EditIcon,
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   CloseIcon,
 } from "./icons";
+import {
+  MdOutlineLocalCafe,
+  MdOutlineInventory2,
+  MdOutlineCoffeeMaker,
+  MdOutlineBakeryDining,
+} from "react-icons/md";
+
+type IconType = React.ComponentType<{ className?: string }>;
 
 type Status = "Out of stock" | "Critical" | "Low Stock" | "In Stock";
 
@@ -28,18 +36,33 @@ type Product = {
   name: string;
   desc: string;
   category: string;
+  supplier?: string;
   stock: number;
   unit: Unit;
   total: number;
   price: string;
   status: Status;
   thumb: string;
+  Icon?: IconType;
 };
+
+const productIcons: { Icon: IconType; tone: string }[] = [
+  { Icon: MdOutlineLocalCafe, tone: "bg-primary/10 text-primary" },
+  { Icon: MdOutlineInventory2, tone: "bg-[#e4edf1] text-[#4d7d94]" },
+  { Icon: GroceryIcon, tone: "bg-[#eef2dd] text-[#7d8f3c]" },
+  { Icon: MdOutlineCoffeeMaker, tone: "bg-neutral-100 text-neutral-700" },
+  { Icon: MdOutlineBakeryDining, tone: "bg-[#f5e7ee] text-[#a6516f]" },
+];
+
+const toneForIcon = (Icon: IconType) =>
+  productIcons.find((p) => p.Icon === Icon)?.tone ??
+  "bg-neutral-100 text-neutral-700";
 
 const initialProducts: Product[] = [
   {
     id: 1,
     name: "Arabica Beans 1kg",
+    Icon: MdOutlineLocalCafe,
     desc: "Direct from Brazil Highlands",
     category: "Beverage",
     stock: 0,
@@ -52,6 +75,7 @@ const initialProducts: Product[] = [
   {
     id: 2,
     name: "Paper Cups 12oz",
+    Icon: MdOutlineInventory2,
     desc: "Eco-friendly Biodegradable",
     category: "Disposables",
     stock: 8,
@@ -64,6 +88,7 @@ const initialProducts: Product[] = [
   {
     id: 3,
     name: "Oat Milk 1L",
+    Icon: GroceryIcon,
     desc: "Dairy-free Alternative",
     category: "Dairy",
     stock: 42,
@@ -76,6 +101,7 @@ const initialProducts: Product[] = [
   {
     id: 4,
     name: "Caramel Syrup",
+    Icon: GroceryIcon,
     desc: "Signature Sweetener",
     category: "Additives",
     stock: 192,
@@ -88,6 +114,7 @@ const initialProducts: Product[] = [
   {
     id: 5,
     name: "Robusta Beans 1kg",
+    Icon: MdOutlineLocalCafe,
     desc: "Bold Vietnamese roast",
     category: "Beverage",
     stock: 340,
@@ -100,6 +127,7 @@ const initialProducts: Product[] = [
   {
     id: 6,
     name: "Vanilla Syrup",
+    Icon: GroceryIcon,
     desc: "Madagascar Vanilla",
     category: "Additives",
     stock: 36,
@@ -112,6 +140,7 @@ const initialProducts: Product[] = [
   {
     id: 7,
     name: "Espresso Cups 4oz",
+    Icon: MdOutlineInventory2,
     desc: "Ceramic, dishwasher safe",
     category: "Disposables",
     stock: 96,
@@ -124,6 +153,7 @@ const initialProducts: Product[] = [
   {
     id: 8,
     name: "Whole Milk 1L",
+    Icon: GroceryIcon,
     desc: "Fresh full cream",
     category: "Dairy",
     stock: 9,
@@ -136,6 +166,7 @@ const initialProducts: Product[] = [
   {
     id: 9,
     name: "Napkins Pack 200s",
+    Icon: MdOutlineInventory2,
     desc: "Recycled 2-ply",
     category: "Disposables",
     stock: 410,
@@ -148,6 +179,7 @@ const initialProducts: Product[] = [
   {
     id: 10,
     name: "Cocoa Powder 500g",
+    Icon: MdOutlineBakeryDining,
     desc: "Dutch-processed",
     category: "Additives",
     stock: 0,
@@ -156,6 +188,19 @@ const initialProducts: Product[] = [
     price: "₱520.00",
     status: "Out of stock",
     thumb: "bg-[#f5e7ee] text-[#a6516f]",
+  },
+  {
+    id: 11,
+    name: "Linea Micra",
+    Icon: MdOutlineCoffeeMaker,
+    desc: "Compact espresso machine",
+    category: "Equipment",
+    stock: 3,
+    unit: "pcs",
+    total: 5,
+    price: "₱165,000.00",
+    status: "Low Stock",
+    thumb: "bg-neutral-100 text-neutral-700",
   },
 ];
 
@@ -178,35 +223,29 @@ const statusRank: Record<Status, number> = {
 
 const priceNum = (s: string) => Number(s.replace(/[^0-9.]/g, ""));
 
-const categories = ["Beverage", "Dairy", "Additives", "Disposables"];
+const categories = [
+  "Beverage",
+  "Dairy",
+  "Additives",
+  "Disposables",
+  "Pastry",
+  "Tea",
+  "Equipment",
+  "Packaging",
+  "Cleaning",
+  "Merchandise",
+];
 
 const units: Unit[] = ["kg", "ml", "pcs"];
 
-const categoryThumb: Record<string, string> = {
-  "Beverage": "bg-[#fdf3e7] text-[#b07d3a]",
-  "Dairy": "bg-[#e4edf1] text-[#4d7d94]",
-  Additives: "bg-[#eef2dd] text-[#7d8f3c]",
-  Disposables: "bg-primary/10 text-primary",
-};
-
-const tonePalette = [
-  "bg-[#fdf3e7] text-[#b07d3a]",
-  "bg-[#e4edf1] text-[#4d7d94]",
-  "bg-[#eef2dd] text-[#7d8f3c]",
-  "bg-primary/10 text-primary",
-  "bg-[#f5e7ee] text-[#a6516f]",
+const suppliers = [
+  "Acme Supplies",
+  "Northwind Traders",
+  "Globex Corp",
+  "Umbrella Foods",
+  "Initech Roasters",
+  "Soylent Distributors",
 ];
-
-// Known categories keep their tone; anything user-created gets a stable
-// color picked from the palette by name.
-const thumbForCategory = (category: string) => {
-  if (categoryThumb[category]) return categoryThumb[category];
-  const key = category.trim();
-  if (!key) return "bg-primary/10 text-primary";
-  let h = 0;
-  for (let i = 0; i < key.length; i++) h += key.charCodeAt(i);
-  return tonePalette[h % tonePalette.length];
-};
 
 const statusFromQty = (qty: number): Status => {
   if (qty <= 0) return "Out of stock";
@@ -219,7 +258,6 @@ type SortState = { key: ColKey; dir: "asc" | "desc" };
 
 export default function InventoryPage() {
   const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [selected, setSelected] = useState<Set<number>>(new Set());
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<SortState>({ key: "name", dir: "asc" });
 
@@ -227,10 +265,14 @@ export default function InventoryPage() {
   const [open, setOpen] = useState(false);
   const [catOpen, setCatOpen] = useState(false);
   const [unitOpen, setUnitOpen] = useState(false);
+  const [supOpen, setSupOpen] = useState(false);
+  const [iconOpen, setIconOpen] = useState(false);
+  const [iconIdx, setIconIdx] = useState(0);
   const [form, setForm] = useState({
     name: "",
     desc: "",
     category: "",
+    supplier: "",
     stock: "",
     unit: "kg" as Unit,
     price: "",
@@ -260,6 +302,8 @@ export default function InventoryPage() {
   const canSave =
     form.name.trim() !== "" &&
     form.category.trim() !== "" &&
+    form.supplier.trim() !== "" &&
+    form.stock.trim() !== "" &&
     form.price.trim() !== "";
 
   const addProduct = () => {
@@ -272,6 +316,7 @@ export default function InventoryPage() {
         name: form.name.trim(),
         desc: form.desc.trim(),
         category: form.category.trim(),
+        supplier: form.supplier,
         stock,
         unit: form.unit,
         total: stock,
@@ -280,7 +325,8 @@ export default function InventoryPage() {
           maximumFractionDigits: 2,
         })}`,
         status: statusFromQty(stock),
-        thumb: thumbForCategory(form.category),
+        thumb: productIcons[iconIdx].tone,
+        Icon: productIcons[iconIdx].Icon,
       },
       ...prev,
     ]);
@@ -288,10 +334,12 @@ export default function InventoryPage() {
       name: "",
       desc: "",
       category: "",
+      supplier: "",
       stock: "",
       unit: "kg",
       price: "",
     });
+    setIconIdx(0);
     setOpen(false);
   };
 
@@ -342,23 +390,6 @@ export default function InventoryPage() {
     else cmp = statusRank[a.status] - statusRank[b.status];
     return sort.dir === "asc" ? cmp : -cmp;
   });
-  const allSelected =
-    visible.length > 0 && visible.every((p) => selected.has(p.id));
-
-  const toggleAll = () =>
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (allSelected) visible.forEach((p) => next.delete(p.id));
-      else visible.forEach((p) => next.add(p.id));
-      return next;
-    });
-
-  const toggleOne = (id: number) =>
-    setSelected((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
 
   return (
     <div className="flex flex-col gap-6">
@@ -381,14 +412,6 @@ export default function InventoryPage() {
           {/* Actions */}
           <div className="flex flex-wrap items-center gap-2">
             <button
-              disabled={selected.size === 0}
-              className="flex h-9 items-center gap-2 rounded-lg border border-[#a6516f]/30 bg-white px-3 text-sm font-medium text-[#a6516f] transition-colors hover:bg-[#f5e7ee] disabled:cursor-not-allowed disabled:border-neutral-200 disabled:bg-white disabled:text-neutral-300 disabled:hover:bg-white enabled:cursor-pointer"
-            >
-              <DeleteIcon className="h-4 w-4" />
-              Delete
-              {selected.size > 0 && ` (${selected.size})`}
-            </button>
-            <button
               onClick={() => setOpen(true)}
               className="flex h-9 cursor-pointer items-center gap-2 rounded-lg bg-primary px-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
             >
@@ -403,15 +426,6 @@ export default function InventoryPage() {
           <table className="w-full min-w-[640px] text-sm">
             <thead>
               <tr className="border-b border-neutral-200 text-left text-xs font-medium uppercase tracking-wide text-neutral-400">
-                <th className="w-10 px-4 py-3">
-                  <input
-                    type="checkbox"
-                    checked={allSelected}
-                    onChange={toggleAll}
-                    aria-label="Select all"
-                    className="h-4 w-4 cursor-pointer accent-primary"
-                  />
-                </th>
                 {sortableTh("name")}
                 {sortableTh("category")}
                 {sortableTh("quantity")}
@@ -421,29 +435,20 @@ export default function InventoryPage() {
             </thead>
             <tbody>
               {visible.map((p) => {
-                const isSel = selected.has(p.id);
+                const RowIcon = p.Icon ?? MdOutlineInventory2;
                 return (
                   <tr
                     key={p.id}
-                    className={`transition-colors hover:bg-primary/5 ${
-                      isSel ? "bg-primary/[0.03]" : ""
-                    }`}
+                    className="transition-colors hover:bg-primary/5"
                   >
-                    <td className="px-4 py-4 align-middle">
-                      <input
-                        type="checkbox"
-                        checked={isSel}
-                        onChange={() => toggleOne(p.id)}
-                        aria-label={`Select ${p.name}`}
-                        className="h-4 w-4 cursor-pointer accent-primary"
-                      />
-                    </td>
-                    <td className="px-2 py-4">
+                    <td className="px-2 py-4 pl-4">
                       <div className="flex items-center gap-3">
                         <span
-                          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${p.thumb}`}
+                          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${toneForIcon(
+                            RowIcon,
+                          )}`}
                         >
-                          <InventoryIcon className="h-5 w-5" />
+                          <RowIcon className="h-5 w-5" />
                         </span>
                         <div className="min-w-0">
                           <p className="truncate font-semibold text-neutral-900">
@@ -513,23 +518,55 @@ export default function InventoryPage() {
             onClick={() => setOpen(false)}
             className="absolute inset-0 bg-black/40"
           />
-          <div className="relative w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl">
+          <div className="relative w-full max-w-lg rounded-2xl bg-white shadow-2xl">
             <div className="flex items-center justify-between border-b border-neutral-200 px-5 py-4">
               <div className="flex items-center gap-3">
-                <span
-                  className={`flex h-10 w-10 items-center justify-center rounded-xl ${thumbForCategory(
-                    form.category,
-                  )}`}
-                >
-                  <InventoryIcon className="h-5 w-5" />
-                </span>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setIconOpen((v) => !v)}
+                    onBlur={() => setTimeout(() => setIconOpen(false), 120)}
+                    title="Choose an icon"
+                    className={`group relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl outline-none ring-offset-1 transition focus:ring-2 focus:ring-primary/40 ${productIcons[iconIdx].tone}`}
+                  >
+                    {(() => {
+                      const Picked = productIcons[iconIdx].Icon;
+                      return <Picked className="h-5 w-5" />;
+                    })()}
+                    <span className="pointer-events-none absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-primary text-white">
+                      <EditIcon className="h-2.5 w-2.5" />
+                    </span>
+                  </button>
+
+                  {iconOpen && (
+                    <div className="absolute left-0 top-12 z-10 flex gap-1.5 rounded-xl border border-neutral-200 bg-white p-2 shadow-lg">
+                      {productIcons.map(({ Icon, tone }, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            setIconIdx(i);
+                            setIconOpen(false);
+                          }}
+                          aria-label={`Icon ${i + 1}`}
+                          aria-pressed={iconIdx === i}
+                          className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg transition ${tone} ${
+                            iconIdx === i
+                              ? "ring-2 ring-primary ring-offset-1"
+                              : "opacity-70 hover:opacity-100"
+                          }`}
+                        >
+                          <Icon className="h-5 w-5" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <div>
                   <h3 className="text-lg font-semibold text-neutral-900">
                     Add Product
                   </h3>
-                  <p className="text-xs text-neutral-500">
-                    Add a new item to your inventory
-                  </p>
                 </div>
               </div>
               <button
@@ -544,7 +581,7 @@ export default function InventoryPage() {
             <div className="flex flex-col gap-4 p-5">
               <div>
                 <label className="mb-1 block text-xs font-medium text-neutral-500">
-                  Item name
+                  Item name <span className="text-[#a6516f]">*</span>
                 </label>
                 <input
                   type="text"
@@ -558,7 +595,8 @@ export default function InventoryPage() {
 
               <div>
                 <label className="mb-1 block text-xs font-medium text-neutral-500">
-                  Description
+                  Description{" "}
+                  <span className="font-normal text-neutral-400">(optional)</span>
                 </label>
                 <input
                   type="text"
@@ -571,7 +609,7 @@ export default function InventoryPage() {
 
               <div>
                 <label className="mb-1 block text-xs font-medium text-neutral-500">
-                  Category
+                  Category <span className="text-[#a6516f]">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -628,10 +666,56 @@ export default function InventoryPage() {
                 </div>
               </div>
 
+              <div>
+                <label className="mb-1 block text-xs font-medium text-neutral-500">
+                  Supplier <span className="text-[#a6516f]">*</span>
+                </label>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setSupOpen((v) => !v)}
+                    onBlur={() => setTimeout(() => setSupOpen(false), 120)}
+                    className={`flex h-10 w-full cursor-pointer items-center justify-between gap-1 rounded-lg border border-neutral-200 bg-white px-3 text-sm outline-none transition-colors focus:border-primary/50 focus:ring-2 focus:ring-primary/20 ${
+                      form.supplier ? "text-neutral-900" : "text-neutral-400"
+                    }`}
+                  >
+                    {form.supplier || "Please select a supplier"}
+                    <ChevronDownIcon
+                      className={`h-4 w-4 shrink-0 text-neutral-400 transition-transform ${
+                        supOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {supOpen && (
+                    <div className="absolute z-10 mt-1 max-h-40 w-full overflow-y-auto rounded-lg border border-neutral-200 bg-white py-1 shadow-lg">
+                      {suppliers.map((s) => (
+                        <button
+                          key={s}
+                          type="button"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            set("supplier", s);
+                            setSupOpen(false);
+                          }}
+                          className={`flex w-full cursor-pointer items-center px-3 py-2 text-left text-sm transition-colors hover:bg-neutral-50 ${
+                            form.supplier === s
+                              ? "font-medium text-primary"
+                              : "text-neutral-700"
+                          }`}
+                        >
+                          {s}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label className="mb-1 block text-xs font-medium text-neutral-500">
-                    Quantity
+                    Quantity <span className="text-[#a6516f]">*</span>
                   </label>
                   <div className="flex">
                     <input
@@ -685,7 +769,7 @@ export default function InventoryPage() {
 
                 <div>
                   <label className="mb-1 block text-xs font-medium text-neutral-500">
-                    Unit price
+                    Unit price <span className="text-[#a6516f]">*</span>
                   </label>
                   <div className="relative">
                     <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-neutral-400">

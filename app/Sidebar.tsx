@@ -23,7 +23,7 @@ const nav: { label: string; Icon: IconType }[] = [
 ];
 
 const itemClass =
-  "flex h-10 w-full cursor-pointer items-center gap-3 rounded-md px-2.5 text-sm transition-colors hover:bg-primary/60 hover:text-white";
+  "flex h-10 w-full cursor-pointer items-center gap-3 overflow-hidden rounded-md px-2.5 text-sm transition-colors hover:bg-primary/60 hover:text-white";
 
 function LogoMark({ className }: { className?: string }) {
   return (
@@ -61,7 +61,11 @@ function SidebarItem({
       }`}
     >
       <Icon className="h-5 w-5 shrink-0" />
-      {expanded && label}
+      {expanded && (
+        <span className="min-w-0 flex-1 truncate whitespace-nowrap text-left">
+          {label}
+        </span>
+      )}
     </button>
   );
 }

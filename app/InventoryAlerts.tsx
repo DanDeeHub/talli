@@ -1,4 +1,7 @@
-import { InventoryIcon } from "./icons";
+import { GroceryIcon } from "./icons";
+import { MdOutlineLocalCafe, MdOutlineInventory2 } from "react-icons/md";
+
+type IconType = React.ComponentType<{ className?: string }>;
 
 type Level = "Out of stock" | "Critical" | "Low Stock";
 
@@ -11,6 +14,7 @@ type Item = {
   unit: Unit;
   level: Level;
   thumb: string;
+  Icon: IconType;
 };
 
 const levelStyles: Record<Level, string> = {
@@ -20,10 +24,10 @@ const levelStyles: Record<Level, string> = {
 };
 
 const items: Item[] = [
-  { name: "Arabica Beans 1kg", desc: "Direct from Brazil Highlands", qty: 0, unit: "kg", level: "Out of stock", thumb: "bg-[#f5e7ee] text-[#a6516f]" },
-  { name: "Paper Cups 12oz", desc: "Eco-friendly Biodegradable", qty: 8, unit: "pcs", level: "Critical", thumb: "bg-primary/10 text-primary" },
-  { name: "Oat Milk 1L", desc: "Dairy-free Alternative", qty: 14, unit: "ml", level: "Low Stock", thumb: "bg-[#fdf3e7] text-[#b07d3a]" },
-  { name: "Caramel Syrup", desc: "Signature Sweetener", qty: 19, unit: "ml", level: "Low Stock", thumb: "bg-[#eef2dd] text-[#7d8f3c]" },
+  { name: "Arabica Beans 1kg", desc: "Direct from Brazil Highlands", qty: 0, unit: "kg", level: "Out of stock", thumb: "bg-primary/10 text-primary", Icon: MdOutlineLocalCafe },
+  { name: "Paper Cups 12oz", desc: "Eco-friendly Biodegradable", qty: 8, unit: "pcs", level: "Critical", thumb: "bg-[#e4edf1] text-[#4d7d94]", Icon: MdOutlineInventory2 },
+  { name: "Oat Milk 1L", desc: "Dairy-free Alternative", qty: 14, unit: "ml", level: "Low Stock", thumb: "bg-[#eef2dd] text-[#7d8f3c]", Icon: GroceryIcon },
+  { name: "Caramel Syrup", desc: "Signature Sweetener", qty: 19, unit: "ml", level: "Low Stock", thumb: "bg-[#eef2dd] text-[#7d8f3c]", Icon: GroceryIcon },
 ];
 
 export default function InventoryAlerts() {
@@ -35,7 +39,7 @@ export default function InventoryAlerts() {
 
       {/* Mobile: stacked cards */}
       <div className="mt-4 flex flex-col gap-2 sm:hidden">
-        {items.map(({ name, desc, qty, unit, level, thumb }) => (
+        {items.map(({ name, desc, qty, unit, level, thumb, Icon }) => (
           <div
             key={name}
             className="flex cursor-pointer items-center gap-3 rounded-lg border border-neutral-100 p-3 transition-colors hover:bg-primary/5"
@@ -43,7 +47,7 @@ export default function InventoryAlerts() {
             <span
               className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${thumb}`}
             >
-              <InventoryIcon className="h-5 w-5" />
+              <Icon className="h-5 w-5" />
             </span>
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold text-neutral-900">
@@ -76,7 +80,7 @@ export default function InventoryAlerts() {
             </tr>
           </thead>
           <tbody>
-            {items.map(({ name, desc, qty, unit, level, thumb }) => (
+            {items.map(({ name, desc, qty, unit, level, thumb, Icon }) => (
               <tr
                 key={name}
                 className="cursor-pointer transition-colors hover:bg-primary/5"
@@ -86,7 +90,7 @@ export default function InventoryAlerts() {
                     <span
                       className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${thumb}`}
                     >
-                      <InventoryIcon className="h-5 w-5" />
+                      <Icon className="h-5 w-5" />
                     </span>
                     <div className="min-w-0">
                       <p className="max-w-[10rem] truncate font-semibold text-neutral-900">

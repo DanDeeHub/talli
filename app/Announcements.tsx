@@ -7,6 +7,7 @@ import {
   InventoryIcon,
   SuppliersIcon,
   PlusIcon,
+  EditIcon,
   CloseIcon,
 } from "./icons";
 
@@ -25,7 +26,7 @@ const iconOptions: { Icon: IconType; tone: string }[] = [
   { Icon: CampaignIcon, tone: "bg-primary/10 text-primary" },
   { Icon: PendingActionsIcon, tone: "bg-[#e4edf1] text-[#4d7d94]" },
   { Icon: InventoryIcon, tone: "bg-[#eef2dd] text-[#7d8f3c]" },
-  { Icon: SuppliersIcon, tone: "bg-[#f5e7ee] text-[#a6516f]" },
+  { Icon: SuppliersIcon, tone: "bg-neutral-100 text-neutral-700" },
 ];
 
 const initialAnnouncements: Announcement[] = [
@@ -53,7 +54,7 @@ const initialAnnouncements: Announcement[] = [
   },
   {
     Icon: SuppliersIcon,
-    tone: "bg-[#f5e7ee] text-[#a6516f]",
+    tone: "bg-neutral-100 text-neutral-700",
     title: "New supplier onboarded",
     body: "Northwind Traders is now in the catalog.",
     time: "3d",
@@ -82,6 +83,7 @@ export default function Announcements() {
   const [body, setBody] = useState("");
   const [pinned, setPinned] = useState(false);
   const [iconIdx, setIconIdx] = useState(0);
+  const [iconOpen, setIconOpen] = useState(false);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -253,14 +255,58 @@ export default function Announcements() {
             className="absolute inset-0 bg-black/40"
           />
           <div className="relative w-full max-w-md rounded-2xl bg-white p-5 shadow-2xl">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-neutral-900">
-                New announcement
-              </h3>
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setIconOpen((v) => !v)}
+                    onBlur={() => setTimeout(() => setIconOpen(false), 120)}
+                    title="Choose an icon"
+                    className={`relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl outline-none ring-offset-1 transition focus:ring-2 focus:ring-primary/40 ${iconOptions[iconIdx].tone}`}
+                  >
+                    {(() => {
+                      const Picked = iconOptions[iconIdx].Icon;
+                      return <Picked className="h-5 w-5" />;
+                    })()}
+                    <span className="pointer-events-none absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-white bg-primary text-white">
+                      <EditIcon className="h-2.5 w-2.5" />
+                    </span>
+                  </button>
+
+                  {iconOpen && (
+                    <div className="absolute left-0 top-12 z-10 flex gap-1.5 rounded-xl border border-neutral-200 bg-white p-2 shadow-lg">
+                      {iconOptions.map(({ Icon, tone }, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            setIconIdx(i);
+                            setIconOpen(false);
+                          }}
+                          aria-label={`Icon ${i + 1}`}
+                          aria-pressed={iconIdx === i}
+                          className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg transition ${tone} ${
+                            iconIdx === i
+                              ? "ring-2 ring-primary ring-offset-1"
+                              : "opacity-70 hover:opacity-100"
+                          }`}
+                        >
+                          <Icon className="h-5 w-5" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <h3 className="text-lg font-semibold text-neutral-900">
+                  New announcement
+                </h3>
+              </div>
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Close"
-                className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
+                className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
               >
                 <CloseIcon className="h-5 w-5" />
               </button>
@@ -292,30 +338,6 @@ export default function Announcements() {
                   placeholder="Write your announcement…"
                   className="w-full resize-none rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-900 outline-none transition-colors placeholder:text-neutral-400 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
                 />
-              </div>
-
-              <div>
-                <label className="mb-1 block text-xs font-medium text-neutral-500">
-                  Icon
-                </label>
-                <div className="flex gap-2">
-                  {iconOptions.map(({ Icon, tone }, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => setIconIdx(i)}
-                      aria-label={`Icon ${i + 1}`}
-                      aria-pressed={iconIdx === i}
-                      className={`flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg transition ${tone} ${
-                        iconIdx === i
-                          ? "ring-2 ring-primary ring-offset-1"
-                          : "opacity-60 hover:opacity-100"
-                      }`}
-                    >
-                      <Icon className="h-5 w-5" />
-                    </button>
-                  ))}
-                </div>
               </div>
 
               <label className="flex cursor-pointer items-center gap-2 text-sm text-neutral-700">
