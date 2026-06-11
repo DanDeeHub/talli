@@ -58,7 +58,7 @@ export default function RecentOrders() {
               <th className="pb-2 text-right font-medium">Status</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-neutral-100">
+          <tbody>
             {orders.map(({ id, supplier, amount, status }) => (
               <tr
                 key={id}

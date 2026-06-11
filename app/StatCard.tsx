@@ -40,12 +40,13 @@ export default function StatCard({
   Icon: IconType;
   label: string;
   value: string;
-  change: number;
+  change?: number;
   series: number[];
   tone?: ToneKey;
 }) {
   const t = tones[tone];
-  const up = change >= 0;
+  const hasChange = typeof change === "number";
+  const up = (change ?? 0) >= 0;
   const Trend = up ? TrendingUpIcon : TrendingDownIcon;
   const trendColor = up ? "text-emerald-600" : "text-red-500";
 
@@ -55,10 +56,12 @@ export default function StatCard({
         <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${t.iconBox}`}>
           <Icon className="h-6 w-6" />
         </div>
-        <span className={`flex items-center gap-1 text-sm font-medium ${trendColor}`}>
-          {up ? "+" : ""}
-          {change}%<Trend className="h-4 w-4" />
-        </span>
+        {hasChange && (
+          <span className={`flex items-center gap-1 text-sm font-medium ${trendColor}`}>
+            {up ? "+" : ""}
+            {change}%<Trend className="h-4 w-4" />
+          </span>
+        )}
       </div>
 
       <p className="mt-4 flex min-h-8 items-start text-xs font-medium uppercase leading-4 tracking-wide text-neutral-500">

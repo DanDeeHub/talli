@@ -5,12 +5,13 @@ import Sidebar from "./Sidebar";
 import Header from "./Header";
 import StatCard from "./StatCard";
 import QuickActions from "./QuickActions";
-import MessageBoard from "./MessageBoard";
+import Announcements from "./Announcements";
 import Billed from "./Billed";
 import RecentOrders from "./RecentOrders";
 import InventoryAlerts from "./InventoryAlerts";
+import InventoryPage from "./InventoryPage";
 import Footer from "./Footer";
-import { PaymentsIcon, PendingActionsIcon, InventoryIcon } from "./icons";
+import { PaymentsIcon, PendingActionsIcon } from "./icons";
 
 export default function Home() {
   const [active, setActive] = useState("Dashboard");
@@ -33,8 +34,8 @@ export default function Home() {
             <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-4">
               <StatCard
                 Icon={PaymentsIcon}
-                label="Total Value"
-                value="₱142,384.00"
+                label="Total Stock Value"
+                value="₱1,248,384.00"
                 change={12.5}
                 series={[42, 55, 48, 63, 58, 75, 90]}
                 tone="rose"
@@ -43,20 +44,11 @@ export default function Home() {
                 Icon={PendingActionsIcon}
                 label="Pending Purchase Orders"
                 value="64"
-                change={-2.1}
                 series={[55, 48, 62, 45, 70, 80, 72]}
                 tone="neutral"
               />
-              <StatCard
-                Icon={InventoryIcon}
-                label="Stocks"
-                value="1,280"
-                change={8.3}
-                series={[35, 42, 38, 55, 60, 72, 88]}
-                tone="olive"
-              />
-              <div className="self-stretch">
-                <MessageBoard />
+              <div className="self-stretch sm:col-span-2 lg:col-span-2">
+                <Announcements />
               </div>
 
               <div className="self-stretch sm:col-span-2 lg:col-span-3">
@@ -73,6 +65,8 @@ export default function Home() {
                 <InventoryAlerts />
               </div>
             </div>
+          ) : active === "Inventory" ? (
+            <InventoryPage />
           ) : (
             <p className="text-neutral-500">{active} content goes here.</p>
           )}
