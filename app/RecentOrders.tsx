@@ -54,10 +54,10 @@ export default function RecentOrders() {
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-xs font-medium uppercase tracking-wide text-neutral-400">
-              <th className="pb-2 font-medium">Order</th>
+              <th className="pb-2 pl-2 font-medium">Order</th>
               <th className="pb-2 font-medium">Supplier</th>
               <th className="pb-2 text-right font-medium">Amount</th>
-              <th className="pb-2 text-right font-medium">Status</th>
+              <th className="pb-2 pr-2 text-right font-medium">Status</th>
             </tr>
           </thead>
           <tbody>
