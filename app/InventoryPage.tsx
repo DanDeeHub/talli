@@ -289,6 +289,22 @@ export default function InventoryPage() {
     form.category.trim() !== "" &&
     !categoryOptions.some((c) => c.toLowerCase() === catQuery);
 
+  const supplierOptions = Array.from(
+    new Set([
+      ...suppliers,
+      ...products
+        .map((p) => p.supplier)
+        .filter((s): s is string => Boolean(s)),
+    ]),
+  );
+  const supQuery = form.supplier.trim().toLowerCase();
+  const filteredSuppliers = supplierOptions.filter((s) =>
+    s.toLowerCase().includes(supQuery),
+  );
+  const showCreateSupplier =
+    form.supplier.trim() !== "" &&
+    !supplierOptions.some((s) => s.toLowerCase() === supQuery);
+
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
@@ -352,8 +368,14 @@ export default function InventoryPage() {
 
   const sortableTh = (col: ColKey, align: "left" | "right" = "left") => {
     const active = sort.key === col;
+    const pad =
+      align === "right"
+        ? "pl-2 pr-6 text-right"
+        : col === "name"
+          ? "pl-5 pr-2"
+          : "pl-2 pr-2";
     return (
-      <th className={`px-2 py-3 ${align === "right" ? "pr-6 text-right" : ""}`}>
+      <th className={`py-3 ${pad}`}>
         <button
           onClick={() => sortByColumn(col)}
           className={`inline-flex cursor-pointer items-center gap-1 font-medium transition-colors hover:text-neutral-600 ${
@@ -393,12 +415,9 @@ export default function InventoryPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Table card */}
       <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm">
-        {/* Search + actions */}
-        <div className="flex flex-col gap-3 border-b border-neutral-200 p-4 sm:flex-row sm:items-center sm:justify-between">
-          {/* Search */}
-          <div className="relative w-full sm:max-w-xs">
+        <div className="flex items-center gap-3 border-b border-neutral-200 p-4 sm:justify-between">
+          <div className="relative min-w-0 flex-1 sm:max-w-xs">
             <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
             <input
               type="text"
@@ -409,19 +428,16 @@ export default function InventoryPage() {
             />
           </div>
 
-          {/* Actions */}
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={() => setOpen(true)}
-              className="flex h-9 cursor-pointer items-center gap-2 rounded-lg bg-primary px-3 text-sm font-medium text-white transition-opacity hover:opacity-90"
-            >
-              <PlusIcon className="h-4 w-4" />
-              Add Product
-            </button>
-          </div>
+          <button
+            onClick={() => setOpen(true)}
+            aria-label="Add Product"
+            className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary px-0 text-sm font-medium text-white transition-opacity hover:opacity-90 sm:w-auto sm:px-3"
+          >
+            <PlusIcon className="h-4 w-4" />
+            <span className="hidden sm:inline">Add Product</span>
+          </button>
         </div>
 
-        {/* Table */}
         <div className="overflow-x-auto">
           <table className="w-full min-w-[640px] text-sm">
             <thead>
@@ -439,9 +455,9 @@ export default function InventoryPage() {
                 return (
                   <tr
                     key={p.id}
-                    className="transition-colors hover:bg-primary/5"
+                    className="cursor-pointer transition-colors hover:bg-primary/5"
                   >
-                    <td className="px-2 py-4 pl-4">
+                    <td className="py-4 pl-5 pr-2">
                       <div className="flex items-center gap-3">
                         <span
                           className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${toneForIcon(
@@ -484,8 +500,7 @@ export default function InventoryPage() {
           </table>
         </div>
 
-        {/* Footer / pagination */}
-        <div className="flex flex-col gap-3 border-t border-neutral-200 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col items-center gap-3 border-t border-neutral-200 p-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-neutral-500">
             Showing 1 to {visible.length} of 124 products
           </p>
@@ -631,7 +646,7 @@ export default function InventoryPage() {
                   />
 
                   {catOpen && (filteredCategories.length > 0 || showCreateCategory) && (
-                    <div className="absolute z-10 mt-1 max-h-52 w-full overflow-y-auto rounded-lg border border-neutral-200 bg-white py-1 shadow-lg">
+                    <div className="absolute z-10 mt-1 max-h-40 w-full overflow-y-auto rounded-lg border border-neutral-200 bg-white py-1 shadow-lg">
                       {filteredCategories.map((c) => (
                         <button
                           key={c}
@@ -671,25 +686,27 @@ export default function InventoryPage() {
                   Supplier <span className="text-[#a6516f]">*</span>
                 </label>
                 <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => setSupOpen((v) => !v)}
+                  <input
+                    type="text"
+                    value={form.supplier}
+                    onChange={(e) => {
+                      set("supplier", e.target.value);
+                      setSupOpen(true);
+                    }}
+                    onFocus={() => setSupOpen(true)}
                     onBlur={() => setTimeout(() => setSupOpen(false), 120)}
-                    className={`flex h-10 w-full cursor-pointer items-center justify-between gap-1 rounded-lg border border-neutral-200 bg-white px-3 text-sm outline-none transition-colors focus:border-primary/50 focus:ring-2 focus:ring-primary/20 ${
-                      form.supplier ? "text-neutral-900" : "text-neutral-400"
+                    placeholder="Please choose or create a supplier"
+                    className="h-10 w-full rounded-lg border border-neutral-200 pl-3 pr-9 text-sm text-neutral-900 outline-none transition-colors placeholder:text-neutral-400 focus:border-primary/50 focus:ring-2 focus:ring-primary/20"
+                  />
+                  <ChevronDownIcon
+                    className={`pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400 transition-transform ${
+                      supOpen ? "rotate-180" : ""
                     }`}
-                  >
-                    {form.supplier || "Please select a supplier"}
-                    <ChevronDownIcon
-                      className={`h-4 w-4 shrink-0 text-neutral-400 transition-transform ${
-                        supOpen ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
+                  />
 
-                  {supOpen && (
+                  {supOpen && (filteredSuppliers.length > 0 || showCreateSupplier) && (
                     <div className="absolute z-10 mt-1 max-h-40 w-full overflow-y-auto rounded-lg border border-neutral-200 bg-white py-1 shadow-lg">
-                      {suppliers.map((s) => (
+                      {filteredSuppliers.map((s) => (
                         <button
                           key={s}
                           type="button"
@@ -707,6 +724,21 @@ export default function InventoryPage() {
                           {s}
                         </button>
                       ))}
+
+                      {showCreateSupplier && (
+                        <button
+                          type="button"
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            set("supplier", form.supplier.trim());
+                            setSupOpen(false);
+                          }}
+                          className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-left text-sm font-medium text-primary transition-colors hover:bg-primary/5"
+                        >
+                          <PlusIcon className="h-4 w-4 shrink-0" />
+                          Create &ldquo;{form.supplier.trim()}&rdquo; supplier
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>

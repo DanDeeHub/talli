@@ -32,7 +32,6 @@ export default function Home() {
         <main className="flex flex-1 flex-col overflow-y-auto [scrollbar-gutter:stable] bg-[#fbf9f8] p-6 sm:p-8">
           {active === "Dashboard" ? (
             <div className="flex flex-col gap-6">
-              {/* Stat cards */}
               <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-3">
                 <StatCard
                   Icon={PaymentsIcon}
@@ -58,10 +57,8 @@ export default function Home() {
                 />
               </div>
 
-              {/* Announcements — own area */}
               <Announcements />
 
-              {/* Bill Performance + Quick Actions */}
               <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-4">
                 <div className="self-stretch lg:col-span-3">
                   <Billed />
@@ -71,7 +68,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Recent Orders + Inventory Alerts */}
               <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
                 <div className="self-stretch">
                   <RecentOrders />

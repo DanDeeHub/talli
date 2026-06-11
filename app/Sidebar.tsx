@@ -95,7 +95,6 @@ export default function Sidebar({
     return () => mql.removeEventListener("change", apply);
   }, [onMobileOpenChange]);
 
-  // Full layout (labels visible): always on mobile, or when expanded on desktop.
   const expanded = isMobile || !collapsed;
 
   const asideClass = `flex flex-col bg-[#2e2e2e] text-white transition-all duration-200 ${
@@ -110,7 +109,6 @@ export default function Sidebar({
 
   return (
     <>
-      {/* Mobile backdrop */}
       {isMobile && mobileOpen && (
         <div
           onClick={() => onMobileOpenChange(false)}

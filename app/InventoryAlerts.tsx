@@ -37,7 +37,6 @@ export default function InventoryAlerts() {
         Inventory Alerts
       </h2>
 
-      {/* Mobile: stacked cards */}
       <div className="mt-4 flex flex-col gap-2 sm:hidden">
         {items.map(({ name, desc, qty, unit, level, thumb, Icon }) => (
           <div
