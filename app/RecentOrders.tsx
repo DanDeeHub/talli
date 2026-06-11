@@ -17,6 +17,8 @@ const orders: Order[] = [
   { id: "PO-1041", supplier: "Northwind Traders", amount: "₱12,180", status: "Pending" },
   { id: "PO-1040", supplier: "Globex Corp", amount: "₱8,940", status: "Pending" },
   { id: "PO-1039", supplier: "Umbrella Foods", amount: "₱31,720", status: "Paid" },
+  { id: "PO-1038", supplier: "Initech Roasters", amount: "₱15,360", status: "Pending" },
+  { id: "PO-1037", supplier: "Soylent Distributors", amount: "₱22,090", status: "Paid" },
 ];
 
 export default function RecentOrders() {

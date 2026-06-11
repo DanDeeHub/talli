@@ -41,7 +41,7 @@ export default function StatCard({
   label: string;
   value: string;
   change?: number;
-  series: number[];
+  series?: number[];
   tone?: ToneKey;
 }) {
   const t = tones[tone];
@@ -71,6 +71,7 @@ export default function StatCard({
         {value}
       </p>
 
+      {series && (
       <div className="mt-auto flex h-12 items-end gap-1.5 pt-5">
         {series.map((h, i) => (
           <div
@@ -89,6 +90,7 @@ export default function StatCard({
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 }

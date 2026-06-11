@@ -9,7 +9,7 @@ type Action = {
 };
 
 const actions: Action[] = [
-  { Icon: ReceiptIcon, title: "New Invoice", subtitle: "Bill your clients" },
+  { Icon: ReceiptIcon, title: "New Order", subtitle: "Create a purchase order" },
   { Icon: AddBoxIcon, title: "Add Product", subtitle: "Update catalog" },
   { Icon: PersonAddIcon, title: "Invite Member", subtitle: "Scale your team" },
 ];

@@ -3,9 +3,9 @@
 import { useState } from "react";
 
 type Point = { label: string; value: number; amount: string };
-type Range = "Day" | "Month" | "Year";
+type Range = "Day" | "Month" | "Year" | "All time";
 
-const ranges: Range[] = ["Day", "Month", "Year"];
+const ranges: Range[] = ["Day", "Month", "Year", "All time"];
 
 const datasets: Record<
   Range,
@@ -47,6 +47,17 @@ const datasets: Record<
       { label: "Jun", value: 80, amount: "₱1,020,400" },
       { label: "Jul", value: 76, amount: "₱969,200" },
       { label: "Aug", value: 88, amount: "₱1,122,500" },
+    ],
+  },
+  "All time": {
+    total: "₱28,640,500.00",
+    subtitle: "Bill trends since launch",
+    points: [
+      { label: "2022", value: 38, amount: "₱4,210,300" },
+      { label: "2023", value: 54, amount: "₱6,184,700" },
+      { label: "2024", value: 70, amount: "₱8,026,900" },
+      { label: "2025", value: 86, amount: "₱9,418,200" },
+      { label: "2026", value: 94, amount: "₱10,800,400" },
     ],
   },
 };

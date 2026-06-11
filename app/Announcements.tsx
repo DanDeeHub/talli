@@ -58,6 +58,20 @@ const initialAnnouncements: Announcement[] = [
     body: "Northwind Traders is now in the catalog.",
     time: "3d",
   },
+  {
+    Icon: CampaignIcon,
+    tone: "bg-primary/10 text-primary",
+    title: "Team meeting Friday",
+    body: "Quick sync at 9 AM before opening.",
+    time: "4d",
+  },
+  {
+    Icon: PendingActionsIcon,
+    tone: "bg-[#e4edf1] text-[#4d7d94]",
+    title: "Price list updated",
+    body: "New beverage prices take effect Monday.",
+    time: "5d",
+  },
 ];
 
 export default function Announcements() {
@@ -129,7 +143,7 @@ export default function Announcements() {
       <div className="mt-4 flex flex-col gap-3">
         {[...items]
           .sort((a, b) => Number(b.pinned ?? false) - Number(a.pinned ?? false))
-          .slice(0, 2)
+          .slice(0, 4)
           .map((item, i) => {
             const { Icon, tone, title, body, time, pinned } = item;
             return (

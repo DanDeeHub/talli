@@ -124,6 +124,14 @@ export function ReceiptIcon(props: IconProps) {
   );
 }
 
+export function ReceiptLongIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M19.5 3.5 18 2l-1.5 1.5L15 2l-1.5 1.5L12 2l-1.5 1.5L9 2 7.5 3.5 6 2 4.5 3.5 3 2v16H1v3c0 1.66 1.34 3 3 3h16c1.66 0 3-1.34 3-3V2zM19 19c0 .55-.45 1-1 1s-1-.45-1-1v-3H5V5h14zM6 7h9v2H6zm10 0h2v2h-2zM6 10h9v2H6zm10 0h2v2h-2zM6 13h9v2H6zm10 0h2v2h-2z" />
+    </Svg>
+  );
+}
+
 export function AddBoxIcon(props: IconProps) {
   return (
     <Svg {...props}>

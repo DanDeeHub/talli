@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Activity from "./Activity";
 
 export default function Header({
   title,
@@ -30,10 +29,6 @@ export default function Header({
       </div>
 
       <div className="flex items-center gap-4">
-        <Activity />
-
-        <div className="h-8 w-px bg-neutral-200" />
-
         <div className="flex items-center gap-3">
           <div className="hidden text-right leading-tight sm:block">
             <div className="text-sm font-medium text-neutral-900">John Doe</div>

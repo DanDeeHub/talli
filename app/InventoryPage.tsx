@@ -1,13 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import StatCard from "./StatCard";
 import {
-  PaymentsIcon,
   SearchIcon,
   InventoryIcon,
-  WarehouseIcon,
-  TrendingDownIcon,
   PlusIcon,
   DeleteIcon,
   ChevronDownIcon,
@@ -242,48 +238,6 @@ export default function InventoryPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Stat cards */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <StatCard
-          Icon={PaymentsIcon}
-          label="Total Stock Value"
-          value="₱1,248,384.00"
-          change={12.5}
-          series={[48, 52, 60, 58, 72, 80, 95]}
-          tone="rose"
-        />
-
-        <div className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm">
-          <div className="flex items-start justify-between">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f5e7ee] text-[#a6516f]">
-              <WarehouseIcon className="h-6 w-6" />
-            </span>
-            <span className="flex items-center gap-1 text-sm font-medium text-red-500">
-              -3.2%
-              <TrendingDownIcon className="h-4 w-4" />
-            </span>
-          </div>
-          <p className="mt-4 text-xs font-medium uppercase tracking-wide text-neutral-500">
-            Out of Stock Items
-          </p>
-          <p className="mt-1 text-2xl font-semibold tracking-tight text-neutral-900">
-            14
-          </p>
-          <p className="mt-5 flex items-center gap-2 text-xs font-medium text-[#a6516f]">
-            <span className="h-2 w-2 rounded-full bg-[#a6516f]" />
-            Requires immediate attention
-          </p>
-        </div>
-
-        <StatCard
-          Icon={InventoryIcon}
-          label="Stocks"
-          value="1,280"
-          series={[35, 42, 38, 55, 60, 72, 88]}
-          tone="olive"
-        />
-      </div>
-
       {/* Table card */}
       <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm">
         {/* Search + actions */}
