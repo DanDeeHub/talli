@@ -3,37 +3,20 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
-export default function LoadingOverlay() {
-  const [done, setDone] = useState(false);
-  const [hidden, setHidden] = useState(false);
-
-  useEffect(() => {
-    const MIN_MS = 600; 
-    const start = performance.now();
-
-    const finish = () => {
-      const elapsed = performance.now() - start;
-      const wait = Math.max(0, MIN_MS - elapsed);
-      window.setTimeout(() => setDone(true), wait);
-    };
-
-    if (document.readyState === "complete") {
-      finish();
-    } else {
-      window.addEventListener("load", finish, { once: true });
-      return () => window.removeEventListener("load", finish);
-    }
-  }, []);
-
-  if (hidden) return null;
-
+export function LoadingScreen({
+  fading = false,
+  onFaded,
+}: {
+  fading?: boolean;
+  onFaded?: () => void;
+}) {
   return (
     <div
-      onTransitionEnd={() => done && setHidden(true)}
+      onTransitionEnd={onFaded}
       className={`fixed inset-0 z-[100] flex flex-col items-center justify-center gap-8 bg-gradient-to-b from-white to-[#f4efed] transition-opacity duration-500 ${
-        done ? "pointer-events-none opacity-0" : "opacity-100"
+        fading ? "pointer-events-none opacity-0" : "opacity-100"
       }`}
-      aria-hidden={done}
+      aria-hidden={fading}
       role="status"
       aria-live="polite"
     >
@@ -53,5 +36,34 @@ export default function LoadingOverlay() {
 
       <span className="sr-only">Loading…</span>
     </div>
+  );
+}
+
+export default function LoadingOverlay() {
+  const [done, setDone] = useState(false);
+  const [hidden, setHidden] = useState(false);
+
+  useEffect(() => {
+    const MIN_MS = 600;
+    const start = performance.now();
+
+    const finish = () => {
+      const elapsed = performance.now() - start;
+      const wait = Math.max(0, MIN_MS - elapsed);
+      window.setTimeout(() => setDone(true), wait);
+    };
+
+    if (document.readyState === "complete") {
+      finish();
+    } else {
+      window.addEventListener("load", finish, { once: true });
+      return () => window.removeEventListener("load", finish);
+    }
+  }, []);
+
+  if (hidden) return null;
+
+  return (
+    <LoadingScreen fading={done} onFaded={() => done && setHidden(true)} />
   );
 }

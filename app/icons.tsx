@@ -146,6 +146,19 @@ export function GroceryIcon({ className }: IconProps) {
   );
 }
 
+export function ArrowRightIcon({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 -960 960 960"
+      fill="currentColor"
+      aria-hidden="true"
+      className={className}
+    >
+      <path d="M400-280v-400l200 200-200 200Z" />
+    </svg>
+  );
+}
+
 export function AddBoxIcon(props: IconProps) {
   return (
     <Svg {...props}>

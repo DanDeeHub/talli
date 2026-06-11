@@ -6,12 +6,14 @@ import {
   DashboardIcon,
   InventoryIcon,
   ReceiptLongIcon,
-  WarehouseIcon,
-  SuppliersIcon,
   LogoutIcon,
   CloseIcon,
 } from "./icons";
-import { MdOutlineStorefront } from "react-icons/md";
+import {
+  MdOutlineStorefront,
+  MdOutlineCoffeeMaker,
+  MdOutlineSoupKitchen,
+} from "react-icons/md";
 
 type IconType = React.ComponentType<{ className?: string }>;
 
@@ -19,8 +21,8 @@ const nav: { label: string; Icon: IconType }[] = [
   { label: "Dashboard", Icon: DashboardIcon },
   { label: "Inventory", Icon: InventoryIcon },
   { label: "Purchase Orders", Icon: ReceiptLongIcon },
-  { label: "Warehouse", Icon: WarehouseIcon },
-  { label: "Suppliers", Icon: SuppliersIcon },
+  { label: "Bar", Icon: MdOutlineCoffeeMaker },
+  { label: "Kitchen", Icon: MdOutlineSoupKitchen },
 ];
 
 const itemBase =

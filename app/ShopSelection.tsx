@@ -61,7 +61,6 @@ export default function ShopSelection({
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [type, setType] = useState("");
-
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     document.addEventListener("keydown", onKey);
@@ -96,7 +95,6 @@ export default function ShopSelection({
   return (
     <>
     <div className="mx-auto w-full max-w-3xl">
-      {/* Search */}
       <div className="relative mx-auto max-w-md">
           <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
           <input
@@ -108,14 +106,13 @@ export default function ShopSelection({
           />
         </div>
 
-        {/* Grid */}
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {visible.map((shop) => (
             <button
               key={shop.id}
               type="button"
               onClick={() => onSelect(shop)}
-              className="group flex flex-col rounded-2xl border border-neutral-200 bg-white p-5 text-left shadow-sm transition hover:border-primary/40 hover:shadow-md"
+              className="group flex cursor-pointer flex-col rounded-2xl border border-neutral-200 bg-white p-5 text-left shadow-sm transition hover:border-primary/40 hover:shadow-md"
             >
               <span
                 className={`flex h-11 w-11 items-center justify-center rounded-xl ${shop.tone}`}
@@ -126,18 +123,13 @@ export default function ShopSelection({
                 {shop.name}
               </h3>
               <p className="text-xs text-primary/80">{shop.type}</p>
-              <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary transition-transform group-hover:translate-x-0.5">
-                Select
-                <span aria-hidden="true">→</span>
-              </span>
             </button>
           ))}
 
-          {/* Add new shop */}
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="flex flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-neutral-300 p-5 text-center transition-colors hover:border-primary/50 hover:bg-primary/5"
+            className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-neutral-300 p-5 text-center transition-colors hover:border-primary/50 hover:bg-primary/5"
           >
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
               <PlusIcon className="h-6 w-6" />
@@ -150,7 +142,6 @@ export default function ShopSelection({
         </div>
       </div>
 
-      {/* Create shop modal */}
       {open && (
         <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
           <div
