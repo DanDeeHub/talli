@@ -3,9 +3,11 @@ import Image from "next/image";
 export default function Header({
   title,
   onMenuClick,
+  shopName,
 }: {
   title: string;
   onMenuClick: () => void;
+  shopName?: string;
 }) {
   return (
     <header className="flex h-16 shrink-0 items-center justify-between border-b border-neutral-200 bg-white px-6">
@@ -29,14 +31,22 @@ export default function Header({
       </div>
 
       <div className="flex items-center gap-4">
-        <div className="flex items-center gap-3">
-          <div className="hidden text-right leading-tight sm:block">
-            <div className="text-sm font-medium text-neutral-900">John Doe</div>
-            <div className="text-xs text-neutral-500">Cashier</div>
-          </div>
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
-            JD
-          </div>
+        {shopName && (
+          <>
+            <div className="hidden text-right leading-tight sm:block">
+              <div className="text-[11px] uppercase tracking-wide text-neutral-400">
+                Current shop
+              </div>
+              <div className="max-w-[12rem] truncate text-sm font-medium text-neutral-900">
+                {shopName}
+              </div>
+            </div>
+            <div className="hidden h-8 w-px bg-neutral-200 sm:block" />
+          </>
+        )}
+
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
+          JD
         </div>
       </div>
     </header>

@@ -11,6 +11,7 @@ import {
   LogoutIcon,
   CloseIcon,
 } from "./icons";
+import { MdOutlineStorefront } from "react-icons/md";
 
 type IconType = React.ComponentType<{ className?: string }>;
 
@@ -22,8 +23,8 @@ const nav: { label: string; Icon: IconType }[] = [
   { label: "Suppliers", Icon: SuppliersIcon },
 ];
 
-const itemClass =
-  "flex h-10 w-full cursor-pointer items-center gap-3 overflow-hidden rounded-md px-2.5 text-sm transition-colors hover:bg-primary/60 hover:text-white";
+const itemBase =
+  "flex h-10 w-full items-center gap-3 overflow-hidden rounded-md px-2.5 text-sm transition-colors";
 
 function LogoMark({ className }: { className?: string }) {
   return (
@@ -44,20 +45,27 @@ function SidebarItem({
   expanded,
   active,
   onClick,
+  disabled,
 }: {
   Icon: IconType;
   label: string;
   expanded: boolean;
   active?: boolean;
   onClick?: () => void;
+  disabled?: boolean;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
+      disabled={disabled}
       title={expanded ? undefined : label}
-      className={`${itemClass} ${
-        active ? "bg-primary/60 text-white" : "text-white/80"
+      className={`${itemBase} ${
+        disabled
+          ? "cursor-not-allowed text-white/30"
+          : `cursor-pointer hover:bg-primary/60 hover:text-white ${
+              active ? "bg-primary/60 text-white" : "text-white/80"
+            }`
       }`}
     >
       <Icon className="h-5 w-5 shrink-0" />
@@ -75,11 +83,15 @@ export default function Sidebar({
   onSelect,
   mobileOpen,
   onMobileOpenChange,
+  onSwitchShop,
+  locked,
 }: {
   active: string;
   onSelect: (label: string) => void;
   mobileOpen: boolean;
   onMobileOpenChange: (open: boolean) => void;
+  onSwitchShop?: () => void;
+  locked?: boolean;
 }) {
   const [collapsed, setCollapsed] = useState(true); // desktop rail state
   const [isMobile, setIsMobile] = useState(false);
@@ -151,21 +163,36 @@ export default function Sidebar({
         </div>
 
         <nav className="flex flex-1 flex-col gap-1 px-3 py-4">
-          {nav.map((item) => (
+          {!locked &&
+            nav.map((item) => (
+              <SidebarItem
+                key={item.label}
+                {...item}
+                expanded={expanded}
+                active={item.label === active}
+                onClick={() => {
+                  onSelect(item.label);
+                  onMobileOpenChange(false);
+                }}
+              />
+            ))}
+        </nav>
+
+        {!locked && (
+          <div className="px-3 pt-4">
             <SidebarItem
-              key={item.label}
-              {...item}
+              Icon={MdOutlineStorefront}
+              label="Switch Shop"
               expanded={expanded}
-              active={item.label === active}
               onClick={() => {
-                onSelect(item.label);
+                onSwitchShop?.();
                 onMobileOpenChange(false);
               }}
             />
-          ))}
-        </nav>
+          </div>
+        )}
 
-        <div className="border-t border-white/10 px-3 py-4">
+        <div className="mt-3 border-t border-white/10 px-3 py-4">
           <SidebarItem Icon={LogoutIcon} label="Logout" expanded={expanded} />
         </div>
       </aside>

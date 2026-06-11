@@ -3,7 +3,7 @@ import { MdOutlineLocalCafe, MdOutlineInventory2 } from "react-icons/md";
 
 type IconType = React.ComponentType<{ className?: string }>;
 
-type Level = "Out of stock" | "Critical" | "Low Stock";
+type Level = "Out of stock" | "Low Stock";
 
 type Unit = "kg" | "ml" | "pcs";
 
@@ -19,13 +19,12 @@ type Item = {
 
 const levelStyles: Record<Level, string> = {
   "Out of stock": "bg-[#f5e7ee] text-[#a6516f]",
-  Critical: "bg-primary/10 text-primary",
   "Low Stock": "bg-[#e4edf1] text-[#4d7d94]",
 };
 
 const items: Item[] = [
   { name: "Arabica Beans 1kg", desc: "Direct from Brazil Highlands", qty: 0, unit: "kg", level: "Out of stock", thumb: "bg-primary/10 text-primary", Icon: MdOutlineLocalCafe },
-  { name: "Paper Cups 12oz", desc: "Eco-friendly Biodegradable", qty: 8, unit: "pcs", level: "Critical", thumb: "bg-[#e4edf1] text-[#4d7d94]", Icon: MdOutlineInventory2 },
+  { name: "Paper Cups 12oz", desc: "Eco-friendly Biodegradable", qty: 8, unit: "pcs", level: "Low Stock", thumb: "bg-[#e4edf1] text-[#4d7d94]", Icon: MdOutlineInventory2 },
   { name: "Oat Milk 1L", desc: "Dairy-free Alternative", qty: 14, unit: "ml", level: "Low Stock", thumb: "bg-[#eef2dd] text-[#7d8f3c]", Icon: GroceryIcon },
   { name: "Caramel Syrup", desc: "Signature Sweetener", qty: 19, unit: "ml", level: "Low Stock", thumb: "bg-[#eef2dd] text-[#7d8f3c]", Icon: GroceryIcon },
 ];

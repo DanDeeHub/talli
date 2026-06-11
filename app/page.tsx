@@ -10,12 +10,47 @@ import Billed from "./Billed";
 import RecentOrders from "./RecentOrders";
 import InventoryAlerts from "./InventoryAlerts";
 import InventoryPage from "./InventoryPage";
+import AddProductModal from "./AddProductModal";
 import Footer from "./Footer";
+import ShopSelection, { Shop, initialShops } from "./ShopSelection";
+import { Product, initialProducts } from "./inventory";
 import { PaymentsIcon, PendingActionsIcon, InventoryIcon } from "./icons";
 
 export default function Home() {
   const [active, setActive] = useState("Dashboard");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [shops, setShops] = useState<Shop[]>(initialShops);
+  const [shop, setShop] = useState<Shop | null>(null);
+  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [addOpen, setAddOpen] = useState(false);
+
+  if (!shop) {
+    return (
+      <div className="flex min-h-0 flex-1">
+        <Sidebar
+          active=""
+          onSelect={() => {}}
+          mobileOpen={mobileOpen}
+          onMobileOpenChange={setMobileOpen}
+          locked
+        />
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+          <Header
+            title="Select Shop"
+            onMenuClick={() => setMobileOpen(true)}
+          />
+          <main className="flex flex-1 flex-col overflow-y-auto [scrollbar-gutter:stable_both-edges] bg-[#fbf9f8] p-6 sm:p-8">
+            <ShopSelection
+              shops={shops}
+              onSelect={setShop}
+              onAdd={(s) => setShops((prev) => [...prev, s])}
+            />
+            <Footer />
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-0 flex-1">
@@ -24,12 +59,17 @@ export default function Home() {
         onSelect={setActive}
         mobileOpen={mobileOpen}
         onMobileOpenChange={setMobileOpen}
+        onSwitchShop={() => setShop(null)}
       />
 
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-        <Header title={active} onMenuClick={() => setMobileOpen(true)} />
+        <Header
+          title={active}
+          onMenuClick={() => setMobileOpen(true)}
+          shopName={shop.name}
+        />
 
-        <main className="flex flex-1 flex-col overflow-y-auto [scrollbar-gutter:stable] bg-[#fbf9f8] p-6 sm:p-8">
+        <main className="flex flex-1 flex-col overflow-y-auto [scrollbar-gutter:stable_both-edges] bg-[#fbf9f8] p-6 sm:p-8">
           {active === "Dashboard" ? (
             <div className="flex flex-col gap-6">
               <div className="grid grid-cols-1 items-stretch gap-6 sm:grid-cols-3">
@@ -64,7 +104,7 @@ export default function Home() {
                   <Billed />
                 </div>
                 <div className="self-stretch lg:col-span-1">
-                  <QuickActions />
+                  <QuickActions onAddProduct={() => setAddOpen(true)} />
                 </div>
               </div>
 
@@ -78,7 +118,10 @@ export default function Home() {
               </div>
             </div>
           ) : active === "Inventory" ? (
-            <InventoryPage />
+            <InventoryPage
+              products={products}
+              onAddProductClick={() => setAddOpen(true)}
+            />
           ) : (
             <p className="text-neutral-500">{active} content goes here.</p>
           )}
@@ -86,6 +129,13 @@ export default function Home() {
           <Footer />
         </main>
       </div>
+
+      <AddProductModal
+        open={addOpen}
+        onClose={() => setAddOpen(false)}
+        onAdd={(p) => setProducts((prev) => [p, ...prev])}
+        products={products}
+      />
     </div>
   );
 }
