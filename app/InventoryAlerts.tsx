@@ -2,10 +2,13 @@ import { InventoryIcon } from "./icons";
 
 type Level = "Out of stock" | "Critical" | "Low Stock";
 
+type Unit = "kg" | "ml" | "pcs";
+
 type Item = {
   name: string;
   desc: string;
   qty: number;
+  unit: Unit;
   level: Level;
   thumb: string;
 };
@@ -17,10 +20,10 @@ const levelStyles: Record<Level, string> = {
 };
 
 const items: Item[] = [
-  { name: "Arabica Beans 1kg", desc: "Direct from Brazil Highlands", qty: 0, level: "Out of stock", thumb: "bg-[#f5e7ee] text-[#a6516f]" },
-  { name: "Paper Cups 12oz", desc: "Eco-friendly Biodegradable", qty: 8, level: "Critical", thumb: "bg-primary/10 text-primary" },
-  { name: "Oat Milk 1L", desc: "Dairy-free Alternative", qty: 14, level: "Low Stock", thumb: "bg-[#fdf3e7] text-[#b07d3a]" },
-  { name: "Caramel Syrup", desc: "Signature Sweetener", qty: 19, level: "Low Stock", thumb: "bg-[#eef2dd] text-[#7d8f3c]" },
+  { name: "Arabica Beans 1kg", desc: "Direct from Brazil Highlands", qty: 0, unit: "kg", level: "Out of stock", thumb: "bg-[#f5e7ee] text-[#a6516f]" },
+  { name: "Paper Cups 12oz", desc: "Eco-friendly Biodegradable", qty: 8, unit: "pcs", level: "Critical", thumb: "bg-primary/10 text-primary" },
+  { name: "Oat Milk 1L", desc: "Dairy-free Alternative", qty: 14, unit: "ml", level: "Low Stock", thumb: "bg-[#fdf3e7] text-[#b07d3a]" },
+  { name: "Caramel Syrup", desc: "Signature Sweetener", qty: 19, unit: "ml", level: "Low Stock", thumb: "bg-[#eef2dd] text-[#7d8f3c]" },
 ];
 
 export default function InventoryAlerts() {
@@ -32,7 +35,7 @@ export default function InventoryAlerts() {
 
       {/* Mobile: stacked cards */}
       <div className="mt-4 flex flex-col gap-2 sm:hidden">
-        {items.map(({ name, desc, qty, level, thumb }) => (
+        {items.map(({ name, desc, qty, unit, level, thumb }) => (
           <div
             key={name}
             className="flex cursor-pointer items-center gap-3 rounded-lg border border-neutral-100 p-3 transition-colors hover:bg-primary/5"
@@ -50,7 +53,7 @@ export default function InventoryAlerts() {
             </div>
             <div className="flex shrink-0 flex-col items-end gap-1">
               <span className="text-xs font-medium text-neutral-500">
-                {qty} units
+                {qty} {unit}
               </span>
               <span
                 className={`rounded-full px-2.5 py-1 text-xs font-medium ${levelStyles[level]}`}
@@ -73,7 +76,7 @@ export default function InventoryAlerts() {
             </tr>
           </thead>
           <tbody>
-            {items.map(({ name, desc, qty, level, thumb }) => (
+            {items.map(({ name, desc, qty, unit, level, thumb }) => (
               <tr
                 key={name}
                 className="cursor-pointer transition-colors hover:bg-primary/5"
@@ -98,7 +101,7 @@ export default function InventoryAlerts() {
                 <td className="py-3 font-medium text-neutral-900">
                   {qty}{" "}
                   <span className="text-xs font-normal text-neutral-400">
-                    units
+                    {unit}
                   </span>
                 </td>
                 <td className="rounded-r-lg py-3 pr-2 text-right">
