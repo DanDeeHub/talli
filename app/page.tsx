@@ -30,23 +30,33 @@ export default function Home() {
   const [contentFading, setContentFading] = useState(false);
   const [authed, setAuthed] = useState(false);
 
-  const logout = () => {
-    setAuthed(false);
-    setShop(null);
-    setActive("Dashboard");
-  };
-
-  const transitionTo = (next: Shop | null) => {
+  const runTransition = (apply: () => void) => {
     setEntering(true);
     setFading(true);
     setTimeout(() => setFading(false), 20);
-    setTimeout(() => setShop(next), 700);
+    setTimeout(apply, 700);
     setTimeout(() => setFading(true), 1000);
     setTimeout(() => setEntering(false), 1500);
+  };
+
+  const transitionTo = (next: Shop | null) => {
+    runTransition(() => setShop(next));
     window.history.pushState(
       { ...window.history.state, shopId: next?.id ?? null, active },
       "",
     );
+  };
+
+  const handleAuth = () => {
+    runTransition(() => setAuthed(true));
+  };
+
+  const logout = () => {
+    runTransition(() => {
+      setAuthed(false);
+      setShop(null);
+      setActive("Dashboard");
+    });
   };
 
   const navigate = (label: string) => {
@@ -115,11 +125,10 @@ export default function Home() {
 
   if (!authed) {
     return (
-      <AuthScreen
-        onAuth={() => {
-          setAuthed(true);
-        }}
-      />
+      <>
+        <AuthScreen onAuth={handleAuth} />
+        {entering && <LoadingScreen fading={fading} />}
+      </>
     );
   }
 

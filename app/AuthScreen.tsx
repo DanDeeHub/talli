@@ -152,7 +152,7 @@ export default function AuthScreen({ onAuth }: { onAuth: () => void }) {
           <p className="mt-2 text-sm text-neutral-500">
             {isRegister
               ? "Create your account to get started."
-              : "Welcome back. Sign in to continue."}
+              : "Sign in to manage your shop."}
           </p>
         </div>
 
