@@ -24,13 +24,10 @@ const shopIcons: { Icon: IconType; tone: string }[] = [
   { Icon: MdOutlineLocalShipping, tone: "bg-neutral-100 text-neutral-700" },
 ];
 
-export type ShopStatus = "Active" | "Maintenance";
-
 export type Shop = {
   id: number;
   name: string;
   type: string;
-  status: ShopStatus;
   Icon: IconType;
   tone: string;
   currency: string;
@@ -41,7 +38,6 @@ export const initialShops: Shop[] = [
     id: 1,
     name: "Downtown Boutique",
     type: "Primary Retail Location",
-    status: "Active",
     Icon: MdOutlineStorefront,
     tone: "bg-[#e4edf1] text-[#4d7d94]",
     currency: "PHP",
@@ -50,7 +46,6 @@ export const initialShops: Shop[] = [
     id: 2,
     name: "Westside Warehouse",
     type: "Distribution Center",
-    status: "Active",
     Icon: MdOutlineWarehouse,
     tone: "bg-[#fdf3e7] text-[#b07d3a]",
     currency: "PHP",
@@ -59,7 +54,6 @@ export const initialShops: Shop[] = [
     id: 3,
     name: "North Gate Fulfillment",
     type: "Regional Logistics Hub",
-    status: "Maintenance",
     Icon: MdOutlineLocalShipping,
     tone: "bg-neutral-100 text-neutral-700",
     currency: "PHP",
@@ -101,7 +95,6 @@ export default function ShopSelection({
       id: Math.max(0, ...shops.map((s) => s.id)) + 1,
       name: name.trim(),
       type: type.trim(),
-      status: "Active",
       Icon: shopIcons[iconIdx].Icon,
       tone: shopIcons[iconIdx].tone,
       currency: "PHP",
