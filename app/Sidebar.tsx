@@ -86,6 +86,7 @@ export default function Sidebar({
   mobileOpen,
   onMobileOpenChange,
   onSwitchShop,
+  onLogout,
   locked,
 }: {
   active: string;
@@ -93,6 +94,7 @@ export default function Sidebar({
   mobileOpen: boolean;
   onMobileOpenChange: (open: boolean) => void;
   onSwitchShop?: () => void;
+  onLogout?: () => void;
   locked?: boolean;
 }) {
   const [collapsed, setCollapsed] = useState(true); // desktop rail state
@@ -195,7 +197,15 @@ export default function Sidebar({
         )}
 
         <div className="mt-3 border-t border-white/10 px-3 py-4">
-          <SidebarItem Icon={LogoutIcon} label="Logout" expanded={expanded} />
+          <SidebarItem
+            Icon={LogoutIcon}
+            label="Logout"
+            expanded={expanded}
+            onClick={() => {
+              onLogout?.();
+              onMobileOpenChange(false);
+            }}
+          />
         </div>
       </aside>
     </>

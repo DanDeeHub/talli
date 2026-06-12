@@ -13,6 +13,7 @@ import InventoryPage from "./InventoryPage";
 import AddProductModal from "./AddProductModal";
 import Footer from "./Footer";
 import ShopSelection, { Shop, initialShops } from "./ShopSelection";
+import AuthScreen from "./AuthScreen";
 import { LoadingScreen } from "./LoadingOverlay";
 import { Product, initialProducts } from "./inventory";
 import { PaymentsIcon, PendingActionsIcon, InventoryIcon } from "./icons";
@@ -27,6 +28,13 @@ export default function Home() {
   const [entering, setEntering] = useState(false);
   const [fading, setFading] = useState(true);
   const [contentFading, setContentFading] = useState(false);
+  const [authed, setAuthed] = useState(false);
+
+  const logout = () => {
+    setAuthed(false);
+    setShop(null);
+    setActive("Dashboard");
+  };
 
   const transitionTo = (next: Shop | null) => {
     setEntering(true);
@@ -55,6 +63,7 @@ export default function Home() {
   };
 
   useEffect(() => {
+    if (localStorage.getItem("talli.authed") === "1") setAuthed(true);
     const savedShopId = localStorage.getItem("talli.shopId");
     let restored: Shop | null = null;
     if (savedShopId) {
@@ -91,6 +100,11 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    if (authed) localStorage.setItem("talli.authed", "1");
+    else localStorage.removeItem("talli.authed");
+  }, [authed]);
+
+  useEffect(() => {
     if (shop) localStorage.setItem("talli.shopId", String(shop.id));
     else localStorage.removeItem("talli.shopId");
   }, [shop]);
@@ -98,6 +112,16 @@ export default function Home() {
   useEffect(() => {
     localStorage.setItem("talli.active", active);
   }, [active]);
+
+  if (!authed) {
+    return (
+      <AuthScreen
+        onAuth={() => {
+          setAuthed(true);
+        }}
+      />
+    );
+  }
 
   return (
     <>
@@ -108,6 +132,7 @@ export default function Home() {
             onSelect={() => {}}
             mobileOpen={mobileOpen}
             onMobileOpenChange={setMobileOpen}
+            onLogout={logout}
             locked
           />
           <div className="flex min-h-0 min-w-0 flex-1 flex-col">
@@ -133,6 +158,7 @@ export default function Home() {
         mobileOpen={mobileOpen}
         onMobileOpenChange={setMobileOpen}
         onSwitchShop={() => transitionTo(null)}
+        onLogout={logout}
       />
 
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
