@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export const metadata = {
   title: "Talli — Coming Soon",
-  description: "Billing and inventory web app for retail shops.",
+  description: "Billing and inventory web app for small retail shops and cafes.",
 };
 
 export default function Landing() {
@@ -57,8 +57,7 @@ export default function Landing() {
         </h1>
 
         <p className="mt-3 max-w-sm text-sm leading-relaxed text-neutral-500 sm:mt-4 sm:text-base">
-          Talli is a billing and inventory web app built for small retail shops. We&apos;re putting on the finishing touches. Check back
-          soon.
+          Talli is a billing and inventory web app built for small retail shops and cafes. Check back soon.
         </p>
       </div>
 
