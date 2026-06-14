@@ -10,6 +10,7 @@ import Billed from "./Billed";
 import RecentOrders from "./RecentOrders";
 import InventoryAlerts from "./InventoryAlerts";
 import InventoryPage from "./InventoryPage";
+import ProductDetail from "./ProductDetail";
 import AddProductModal from "./AddProductModal";
 import Footer from "./Footer";
 import ShopSelection, { Shop, initialShops } from "./ShopSelection";
@@ -25,6 +26,7 @@ export default function Home() {
   const [shop, setShop] = useState<Shop | null>(null);
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [addOpen, setAddOpen] = useState(false);
+  const [detailId, setDetailId] = useState<number | null>(null);
   const [entering, setEntering] = useState(false);
   const [fading, setFading] = useState(true);
   const [contentFading, setContentFading] = useState(false);
@@ -40,9 +42,17 @@ export default function Home() {
   };
 
   const transitionTo = (next: Shop | null) => {
-    runTransition(() => setShop(next));
+    runTransition(() => {
+      setShop(next);
+      setDetailId(null);
+    });
     window.history.pushState(
-      { ...window.history.state, shopId: next?.id ?? null, active },
+      {
+        ...window.history.state,
+        shopId: next?.id ?? null,
+        active,
+        detailId: null,
+      },
       "",
     );
   };
@@ -56,20 +66,48 @@ export default function Home() {
       setAuthed(false);
       setShop(null);
       setActive("Dashboard");
+      setDetailId(null);
     });
   };
 
   const navigate = (label: string) => {
-    if (label === active) return;
+    if (label === active && detailId === null) return;
     window.history.pushState(
-      { ...window.history.state, shopId: shop?.id ?? null, active: label },
+      {
+        ...window.history.state,
+        shopId: shop?.id ?? null,
+        active: label,
+        detailId: null,
+      },
       "",
     );
     setContentFading(true);
     setTimeout(() => {
       setActive(label);
+      setDetailId(null);
       setContentFading(false);
     }, 200);
+  };
+
+  const openDetail = (product: Product) => {
+    window.history.pushState(
+      {
+        ...window.history.state,
+        shopId: shop?.id ?? null,
+        active,
+        detailId: product.id,
+      },
+      "",
+    );
+    setContentFading(true);
+    setTimeout(() => {
+      setDetailId(product.id);
+      setContentFading(false);
+    }, 200);
+  };
+
+  const closeDetail = () => {
+    window.history.back();
   };
 
   useEffect(() => {
@@ -82,17 +120,25 @@ export default function Home() {
     }
     const savedActive = localStorage.getItem("talli.active") ?? "Dashboard";
     setActive(savedActive);
+    const savedDetailId = localStorage.getItem("talli.detailId");
+    const restoredDetailId = savedDetailId ? Number(savedDetailId) : null;
+    if (restoredDetailId != null) setDetailId(restoredDetailId);
     window.history.replaceState(
       {
         ...window.history.state,
         shopId: restored?.id ?? null,
         active: savedActive,
+        detailId: restoredDetailId,
       },
       "",
     );
 
     const onPop = (e: PopStateEvent) => {
-      const st = e.state as { shopId: number | null; active: string } | null;
+      const st = e.state as {
+        shopId: number | null;
+        active: string;
+        detailId?: number | null;
+      } | null;
       if (!st || typeof st.active !== "string") return;
       setContentFading(true);
       setTimeout(() => {
@@ -102,6 +148,7 @@ export default function Home() {
             : null,
         );
         setActive(st.active);
+        setDetailId(st.detailId ?? null);
         setContentFading(false);
       }, 200);
     };
@@ -122,6 +169,16 @@ export default function Home() {
   useEffect(() => {
     localStorage.setItem("talli.active", active);
   }, [active]);
+
+  useEffect(() => {
+    if (detailId != null) localStorage.setItem("talli.detailId", String(detailId));
+    else localStorage.removeItem("talli.detailId");
+  }, [detailId]);
+
+  const detailProduct =
+    detailId != null
+      ? products.find((p) => p.id === detailId) ?? null
+      : null;
 
   if (!authed) {
     return (
@@ -231,10 +288,27 @@ export default function Home() {
               </div>
             </div>
           ) : active === "Inventory" ? (
-            <InventoryPage
-              products={products}
-              onAddProductClick={() => setAddOpen(true)}
-            />
+            detailProduct ? (
+              <ProductDetail
+                product={detailProduct}
+                onBack={closeDetail}
+                onSave={(p) =>
+                  setProducts((prev) =>
+                    prev.map((x) => (x.id === p.id ? p : x)),
+                  )
+                }
+                onDelete={(id) => {
+                  setProducts((prev) => prev.filter((x) => x.id !== id));
+                  closeDetail();
+                }}
+              />
+            ) : (
+              <InventoryPage
+                products={products}
+                onAddProductClick={() => setAddOpen(true)}
+                onRowClick={openDetail}
+              />
+            )
           ) : (
             <p className="text-neutral-500">{active} content goes here.</p>
           )}
@@ -250,6 +324,7 @@ export default function Home() {
             onAdd={(p) => setProducts((prev) => [p, ...prev])}
             products={products}
           />
+
         </div>
       )}
 

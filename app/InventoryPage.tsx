@@ -24,9 +24,11 @@ type SortState = { key: ColKey; dir: "asc" | "desc" };
 export default function InventoryPage({
   products,
   onAddProductClick,
+  onRowClick,
 }: {
   products: Product[];
   onAddProductClick: () => void;
+  onRowClick: (product: Product) => void;
 }) {
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<SortState>({ key: "name", dir: "asc" });
@@ -128,6 +130,7 @@ export default function InventoryPage({
                 return (
                   <tr
                     key={p.id}
+                    onClick={() => onRowClick(p)}
                     className="cursor-pointer transition-colors hover:bg-primary/5"
                   >
                     <td className="py-4 pl-5 pr-2">

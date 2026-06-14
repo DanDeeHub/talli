@@ -1,7 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { PlusIcon, CloseIcon, ChevronDownIcon, EditIcon } from "./icons";
+import {
+  PlusIcon,
+  CloseIcon,
+  ChevronDownIcon,
+  EditIcon,
+  DeleteIcon,
+} from "./icons";
 import {
   Product,
   Unit,
@@ -17,13 +23,20 @@ export default function AddProductModal({
   open,
   onClose,
   onAdd,
+  onSave,
+  onDelete,
+  product,
   products,
 }: {
   open: boolean;
   onClose: () => void;
   onAdd: (product: Product) => void;
+  onSave?: (product: Product) => void;
+  onDelete?: (id: number) => void;
+  product?: Product | null;
   products: Product[];
 }) {
+  const isEdit = Boolean(product);
   const [catOpen, setCatOpen] = useState(false);
   const [unitOpen, setUnitOpen] = useState(false);
   const [supOpen, setSupOpen] = useState(false);
@@ -45,6 +58,21 @@ export default function AddProductModal({
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [open, onClose]);
+
+  useEffect(() => {
+    if (!open || !product) return;
+    setForm({
+      name: product.name,
+      desc: product.desc,
+      category: product.category,
+      supplier: product.supplier ?? "",
+      stock: String(product.stock),
+      unit: product.unit,
+      price: String(priceNum(product.price)),
+    });
+    const idx = productIcons.findIndex((p) => p.Icon === product.Icon);
+    setIconIdx(idx >= 0 ? idx : 0);
+  }, [open, product]);
 
   const set = (k: keyof typeof form, v: string) =>
     setForm((f) => ({ ...f, [k]: v }));
@@ -98,17 +126,18 @@ export default function AddProductModal({
 
   const submit = () => {
     if (!canSave) return;
-    const stock = Math.max(0, Math.round(Number(form.stock) || 0));
+    const stock =
+      form.unit === "pcs"
+        ? Math.max(0, Math.round(Number(form.stock) || 0))
+        : Math.max(0, Number(form.stock) || 0);
     const priceValue = priceNum(form.price);
-    onAdd({
-      id: Math.max(0, ...products.map((p) => p.id)) + 1,
+    const base = {
       name: form.name.trim(),
       desc: form.desc.trim(),
       category: form.category.trim(),
       supplier: form.supplier,
       stock,
       unit: form.unit,
-      total: stock,
       price: `₱${priceValue.toLocaleString("en-PH", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
@@ -116,7 +145,22 @@ export default function AddProductModal({
       status: statusFromQty(stock),
       thumb: productIcons[iconIdx].tone,
       Icon: productIcons[iconIdx].Icon,
-    });
+    };
+    if (isEdit && product) {
+      onSave?.({ ...product, ...base });
+    } else {
+      onAdd({
+        id: Math.max(0, ...products.map((p) => p.id)) + 1,
+        total: stock,
+        ...base,
+      });
+    }
+    reset();
+    onClose();
+  };
+
+  const remove = () => {
+    if (product) onDelete?.(product.id);
     reset();
     onClose();
   };
@@ -178,7 +222,7 @@ export default function AddProductModal({
             </div>
             <div>
               <h3 className="text-lg font-semibold text-neutral-900">
-                Add Product
+                {isEdit ? "Edit Product" : "Add Product"}
               </h3>
             </div>
           </div>
@@ -351,6 +395,7 @@ export default function AddProductModal({
                 <input
                   type="number"
                   min={0}
+                  step={form.unit === "pcs" ? "1" : "any"}
                   value={form.stock}
                   onChange={(e) => set("stock", e.target.value)}
                   placeholder="0"
@@ -422,21 +467,38 @@ export default function AddProductModal({
           </p>
         </div>
 
-        <div className="flex justify-end gap-2 border-t border-neutral-200 px-5 py-4">
-          <button
-            onClick={close}
-            className="h-9 cursor-pointer rounded-lg border border-neutral-200 bg-white px-4 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={submit}
-            disabled={!canSave}
-            className="flex h-9 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 enabled:cursor-pointer"
-          >
-            <PlusIcon className="h-4 w-4" />
-            Add Product
-          </button>
+        <div className="flex items-center justify-between border-t border-neutral-200 px-5 py-4">
+          <div>
+            {isEdit && (
+              <button
+                onClick={remove}
+                className="flex h-9 cursor-pointer items-center gap-2 rounded-lg px-3 text-sm font-medium text-[#a6516f] transition-colors hover:bg-[#f5e7ee]"
+              >
+                <DeleteIcon className="h-4 w-4" />
+                Delete
+              </button>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={close}
+              className="h-9 cursor-pointer rounded-lg border border-neutral-200 bg-white px-4 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={submit}
+              disabled={!canSave}
+              className="flex h-9 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 enabled:cursor-pointer"
+            >
+              {isEdit ? (
+                <EditIcon className="h-4 w-4" />
+              ) : (
+                <PlusIcon className="h-4 w-4" />
+              )}
+              {isEdit ? "Save changes" : "Add Product"}
+            </button>
+          </div>
         </div>
       </div>
     </div>
