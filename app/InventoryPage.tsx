@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   SearchIcon,
   PlusIcon,
@@ -88,6 +88,15 @@ export default function InventoryPage({
       return sort.dir === "asc" ? cmp : -cmp;
     });
 
+  const PAGE_SIZE = 10;
+  const [page, setPage] = useState(1);
+  useEffect(() => setPage(1), [query, sort]);
+  const totalPages = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
+  const current = Math.min(page, totalPages);
+  const paged = visible.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
+  const firstRow = visible.length === 0 ? 0 : (current - 1) * PAGE_SIZE + 1;
+  const lastRow = Math.min(current * PAGE_SIZE, visible.length);
+
   return (
     <div className="flex flex-col gap-6">
       <div className="rounded-2xl border border-neutral-200 bg-white shadow-sm">
@@ -125,7 +134,7 @@ export default function InventoryPage({
               </tr>
             </thead>
             <tbody>
-              {visible.map((p) => {
+              {paged.map((p) => {
                 const RowIcon = p.Icon ?? fallbackIcon;
                 return (
                   <tr
@@ -178,17 +187,22 @@ export default function InventoryPage({
 
         <div className="flex flex-col items-center gap-3 border-t border-neutral-200 p-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-neutral-500">
-            Showing 1 to {visible.length} of 124 products
+            Showing {firstRow} to {lastRow} of {visible.length} products
           </p>
           <div className="flex items-center gap-1">
-            <button className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-neutral-200 text-neutral-500 transition-colors hover:bg-neutral-50">
+            <button
+              onClick={() => setPage(current - 1)}
+              disabled={current === 1}
+              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-neutral-200 text-neutral-500 transition-colors hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-40"
+            >
               <ChevronLeftIcon className="h-4 w-4" />
             </button>
-            {[1, 2, 3].map((n) => (
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
               <button
                 key={n}
+                onClick={() => setPage(n)}
                 className={`flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-sm font-medium transition-colors ${
-                  n === 1
+                  n === current
                     ? "bg-primary text-white"
                     : "border border-neutral-200 text-neutral-600 hover:bg-neutral-50"
                 }`}
@@ -196,7 +210,11 @@ export default function InventoryPage({
                 {n}
               </button>
             ))}
-            <button className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-neutral-200 text-neutral-500 transition-colors hover:bg-neutral-50">
+            <button
+              onClick={() => setPage(current + 1)}
+              disabled={current === totalPages}
+              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-neutral-200 text-neutral-500 transition-colors hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-40"
+            >
               <ChevronRightIcon className="h-4 w-4" />
             </button>
           </div>

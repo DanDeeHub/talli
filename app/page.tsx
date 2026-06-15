@@ -13,11 +13,14 @@ import InventoryPage from "./InventoryPage";
 import ProductDetail from "./ProductDetail";
 import SupplierDetail from "./SupplierDetail";
 import AddProductModal from "./AddProductModal";
+import PurchaseOrdersPage from "./PurchaseOrdersPage";
+import PurchaseOrderModal from "./PurchaseOrderModal";
 import Footer from "./Footer";
 import ShopSelection, { Shop, initialShops } from "./ShopSelection";
 import AuthScreen from "./AuthScreen";
 import { LoadingScreen } from "./LoadingOverlay";
 import { Product, initialProducts } from "./inventory";
+import { PurchaseOrder, initialPurchaseOrders } from "./purchaseOrders";
 import { PaymentsIcon, PendingActionsIcon, InventoryIcon } from "./icons";
 
 export default function Home() {
@@ -26,6 +29,11 @@ export default function Home() {
   const [shops, setShops] = useState<Shop[]>(initialShops);
   const [shop, setShop] = useState<Shop | null>(null);
   const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [purchaseOrders, setPurchaseOrders] = useState<PurchaseOrder[]>(
+    initialPurchaseOrders,
+  );
+  const [poModalOpen, setPoModalOpen] = useState(false);
+  const [editingOrder, setEditingOrder] = useState<PurchaseOrder | null>(null);
   const [addOpen, setAddOpen] = useState(false);
   const [detailId, setDetailId] = useState<number | null>(null);
   const [supplierName, setSupplierName] = useState<string | null>(null);
@@ -358,6 +366,18 @@ export default function Home() {
                 onRowClick={openDetail}
               />
             )
+          ) : active === "Purchase Orders" ? (
+            <PurchaseOrdersPage
+              orders={purchaseOrders}
+              onNewOrderClick={() => {
+                setEditingOrder(null);
+                setPoModalOpen(true);
+              }}
+              onRowClick={(o) => {
+                setEditingOrder(o);
+                setPoModalOpen(true);
+              }}
+            />
           ) : (
             <p className="text-neutral-500">{active} content goes here.</p>
           )}
@@ -372,6 +392,23 @@ export default function Home() {
             onClose={() => setAddOpen(false)}
             onAdd={(p) => setProducts((prev) => [p, ...prev])}
             products={products}
+          />
+
+          <PurchaseOrderModal
+            open={poModalOpen}
+            onClose={() => setPoModalOpen(false)}
+            order={editingOrder}
+            orders={purchaseOrders}
+            products={products}
+            onCreate={(o) => setPurchaseOrders((prev) => [o, ...prev])}
+            onSave={(o) =>
+              setPurchaseOrders((prev) =>
+                prev.map((x) => (x.id === o.id ? o : x)),
+              )
+            }
+            onDelete={(id) =>
+              setPurchaseOrders((prev) => prev.filter((x) => x.id !== id))
+            }
           />
 
         </div>
