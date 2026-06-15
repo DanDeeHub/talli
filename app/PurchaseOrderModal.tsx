@@ -43,6 +43,8 @@ const money2 = (n: number) =>
     maximumFractionDigits: 2,
   });
 
+const currentUser = "John Doe";
+
 export default function PurchaseOrderModal({
   open,
   onClose,
@@ -152,6 +154,7 @@ export default function PurchaseOrderModal({
         id: Math.max(0, ...orders.map((o) => o.id)) + 1,
         poNumber: nextPoNumber(orders),
         supplier: supplier.trim(),
+        createdBy: currentUser,
         status,
         orderedDate: todayISO(),
         items,
@@ -187,7 +190,9 @@ export default function PurchaseOrderModal({
                 {isEdit ? "Edit Purchase Order" : "New Purchase Order"}
               </h3>
               <p className="text-xs text-neutral-400">
-                {isEdit ? order?.poNumber : nextPoNumber(orders)}
+                {isEdit
+                  ? `${order?.poNumber} · ${order?.createdBy}`
+                  : nextPoNumber(orders)}
               </p>
             </div>
           </div>

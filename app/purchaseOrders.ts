@@ -14,6 +14,7 @@ export type PurchaseOrder = {
   id: number;
   poNumber: string;
   supplier: string;
+  createdBy: string;
   status: POStatus;
   orderedDate: string; // ISO yyyy-mm-dd — when the PO was created
   items: POLineItem[];
@@ -96,6 +97,7 @@ export const initialPurchaseOrders: PurchaseOrder[] = [
     id: 1,
     poNumber: "PO-1042",
     supplier: "Initech Roasters",
+    createdBy: "Maria Santos",
     status: "Pending",
     orderedDate: "2026-06-12",
     items: [
@@ -107,6 +109,7 @@ export const initialPurchaseOrders: PurchaseOrder[] = [
     id: 2,
     poNumber: "PO-1041",
     supplier: "Globex Corp",
+    createdBy: "Carlo Reyes",
     status: "Paid",
     orderedDate: "2026-06-05",
     items: [
@@ -118,6 +121,7 @@ export const initialPurchaseOrders: PurchaseOrder[] = [
     id: 3,
     poNumber: "PO-1040",
     supplier: "Soylent Distributors",
+    createdBy: "Maria Santos",
     status: "Pending",
     orderedDate: "2026-06-11",
     items: [
@@ -130,6 +134,7 @@ export const initialPurchaseOrders: PurchaseOrder[] = [
     id: 4,
     poNumber: "PO-1039",
     supplier: "Umbrella Foods",
+    createdBy: "John Doe",
     status: "Pending",
     orderedDate: "2026-06-14",
     items: [
@@ -141,6 +146,7 @@ export const initialPurchaseOrders: PurchaseOrder[] = [
     id: 5,
     poNumber: "PO-1038",
     supplier: "Northwind Traders",
+    createdBy: "Carlo Reyes",
     status: "Paid",
     orderedDate: "2026-05-28",
     items: [
@@ -151,6 +157,7 @@ export const initialPurchaseOrders: PurchaseOrder[] = [
     id: 6,
     poNumber: "PO-1037",
     supplier: "Acme Supplies",
+    createdBy: "Admin",
     status: "Paid",
     orderedDate: "2026-05-20",
     items: [
@@ -161,6 +168,7 @@ export const initialPurchaseOrders: PurchaseOrder[] = [
     id: 7,
     poNumber: "PO-1036",
     supplier: "Initech Roasters",
+    createdBy: "Maria Santos",
     status: "Paid",
     orderedDate: "2026-05-16",
     items: [
@@ -171,6 +179,7 @@ export const initialPurchaseOrders: PurchaseOrder[] = [
     id: 8,
     poNumber: "PO-1035",
     supplier: "Globex Corp",
+    createdBy: "John Doe",
     status: "Pending",
     orderedDate: "2026-05-14",
     items: [
@@ -181,6 +190,7 @@ export const initialPurchaseOrders: PurchaseOrder[] = [
     id: 9,
     poNumber: "PO-1034",
     supplier: "Umbrella Foods",
+    createdBy: "Carlo Reyes",
     status: "Paid",
     orderedDate: "2026-05-10",
     items: [
@@ -192,6 +202,7 @@ export const initialPurchaseOrders: PurchaseOrder[] = [
     id: 10,
     poNumber: "PO-1033",
     supplier: "Soylent Distributors",
+    createdBy: "Maria Santos",
     status: "Pending",
     orderedDate: "2026-05-08",
     items: [
@@ -202,6 +213,7 @@ export const initialPurchaseOrders: PurchaseOrder[] = [
     id: 11,
     poNumber: "PO-1032",
     supplier: "Northwind Traders",
+    createdBy: "John Doe",
     status: "Paid",
     orderedDate: "2026-05-04",
     items: [
@@ -212,6 +224,7 @@ export const initialPurchaseOrders: PurchaseOrder[] = [
     id: 12,
     poNumber: "PO-1031",
     supplier: "Initech Roasters",
+    createdBy: "Carlo Reyes",
     status: "Pending",
     orderedDate: "2026-05-02",
     items: [
@@ -222,6 +235,7 @@ export const initialPurchaseOrders: PurchaseOrder[] = [
     id: 13,
     poNumber: "PO-1030",
     supplier: "Globex Corp",
+    createdBy: "Admin",
     status: "Paid",
     orderedDate: "2026-04-27",
     items: [
@@ -232,6 +246,7 @@ export const initialPurchaseOrders: PurchaseOrder[] = [
     id: 14,
     poNumber: "PO-1029",
     supplier: "Soylent Distributors",
+    createdBy: "Maria Santos",
     status: "Paid",
     orderedDate: "2026-04-22",
     items: [

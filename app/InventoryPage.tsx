@@ -11,6 +11,7 @@ import {
 import {
   Product,
   ColKey,
+  Status,
   columnLabels,
   statusRank,
   statusStyles,
@@ -18,6 +19,13 @@ import {
   toneForIcon,
   fallbackIcon,
 } from "./inventory";
+
+const statusOptions: (Status | "All")[] = [
+  "All",
+  "In Stock",
+  "Low Stock",
+  "Out of stock",
+];
 
 type SortState = { key: ColKey; dir: "asc" | "desc" };
 
@@ -31,6 +39,8 @@ export default function InventoryPage({
   onRowClick: (product: Product) => void;
 }) {
   const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<Status | "All">("All");
+  const [filterOpen, setFilterOpen] = useState(false);
   const [sort, setSort] = useState<SortState>({ key: "name", dir: "asc" });
 
   const sortByColumn = (key: ColKey) =>
@@ -71,6 +81,7 @@ export default function InventoryPage({
 
   const q = query.trim().toLowerCase();
   const visible = products
+    .filter((p) => statusFilter === "All" || p.status === statusFilter)
     .filter(
       (p) =>
         !q ||
@@ -90,7 +101,7 @@ export default function InventoryPage({
 
   const PAGE_SIZE = 10;
   const [page, setPage] = useState(1);
-  useEffect(() => setPage(1), [query, sort]);
+  useEffect(() => setPage(1), [query, statusFilter, sort]);
   const totalPages = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
   const current = Math.min(page, totalPages);
   const paged = visible.slice((current - 1) * PAGE_SIZE, current * PAGE_SIZE);
@@ -112,14 +123,54 @@ export default function InventoryPage({
             />
           </div>
 
-          <button
-            onClick={onAddProductClick}
-            aria-label="Add Product"
-            className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary px-0 text-sm font-medium text-white transition-opacity hover:opacity-90 sm:w-auto sm:px-3"
-          >
-            <PlusIcon className="h-4 w-4" />
-            <span className="hidden sm:inline">Add Product</span>
-          </button>
+          <div className="flex shrink-0 items-center gap-2">
+            <div className="relative hidden sm:block">
+              <button
+                type="button"
+                onClick={() => setFilterOpen((v) => !v)}
+                onBlur={() => setTimeout(() => setFilterOpen(false), 120)}
+                className="flex h-9 cursor-pointer items-center justify-between gap-2 rounded-lg border border-neutral-200 bg-white px-3 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
+              >
+                {statusFilter === "All" ? "All status" : statusFilter}
+                <ChevronDownIcon
+                  className={`h-4 w-4 shrink-0 text-neutral-400 transition-transform ${
+                    filterOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              {filterOpen && (
+                <div className="absolute right-0 z-10 mt-1 w-40 overflow-hidden rounded-lg border border-neutral-200 bg-white py-1 shadow-lg">
+                  {statusOptions.map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        setStatusFilter(s);
+                        setFilterOpen(false);
+                      }}
+                      className={`flex w-full cursor-pointer items-center px-3 py-2 text-left text-sm transition-colors hover:bg-neutral-50 ${
+                        statusFilter === s
+                          ? "font-medium text-primary"
+                          : "text-neutral-700"
+                      }`}
+                    >
+                      {s === "All" ? "All status" : s}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <button
+              onClick={onAddProductClick}
+              aria-label="Add Product"
+              className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary px-0 text-sm font-medium text-white transition-opacity hover:opacity-90 sm:w-auto sm:px-3"
+            >
+              <PlusIcon className="h-4 w-4" />
+              <span className="hidden sm:inline">Add Product</span>
+            </button>
+          </div>
         </div>
 
         <div className="overflow-x-auto">
