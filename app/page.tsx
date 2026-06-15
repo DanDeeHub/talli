@@ -11,6 +11,7 @@ import RecentOrders from "./RecentOrders";
 import InventoryAlerts from "./InventoryAlerts";
 import InventoryPage from "./InventoryPage";
 import ProductDetail from "./ProductDetail";
+import SupplierDetail from "./SupplierDetail";
 import AddProductModal from "./AddProductModal";
 import Footer from "./Footer";
 import ShopSelection, { Shop, initialShops } from "./ShopSelection";
@@ -27,6 +28,7 @@ export default function Home() {
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [addOpen, setAddOpen] = useState(false);
   const [detailId, setDetailId] = useState<number | null>(null);
+  const [supplierName, setSupplierName] = useState<string | null>(null);
   const [entering, setEntering] = useState(false);
   const [fading, setFading] = useState(true);
   const [contentFading, setContentFading] = useState(false);
@@ -45,6 +47,7 @@ export default function Home() {
     runTransition(() => {
       setShop(next);
       setDetailId(null);
+      setSupplierName(null);
     });
     window.history.pushState(
       {
@@ -52,6 +55,7 @@ export default function Home() {
         shopId: next?.id ?? null,
         active,
         detailId: null,
+        supplier: null,
       },
       "",
     );
@@ -67,17 +71,19 @@ export default function Home() {
       setShop(null);
       setActive("Dashboard");
       setDetailId(null);
+      setSupplierName(null);
     });
   };
 
   const navigate = (label: string) => {
-    if (label === active && detailId === null) return;
+    if (label === active && detailId === null && supplierName === null) return;
     window.history.pushState(
       {
         ...window.history.state,
         shopId: shop?.id ?? null,
         active: label,
         detailId: null,
+        supplier: null,
       },
       "",
     );
@@ -85,6 +91,7 @@ export default function Home() {
     setTimeout(() => {
       setActive(label);
       setDetailId(null);
+      setSupplierName(null);
       setContentFading(false);
     }, 200);
   };
@@ -96,17 +103,41 @@ export default function Home() {
         shopId: shop?.id ?? null,
         active,
         detailId: product.id,
+        supplier: null,
       },
       "",
     );
     setContentFading(true);
     setTimeout(() => {
       setDetailId(product.id);
+      setSupplierName(null);
       setContentFading(false);
     }, 200);
   };
 
   const closeDetail = () => {
+    window.history.back();
+  };
+
+  const openSupplier = (supplier: string) => {
+    window.history.pushState(
+      {
+        ...window.history.state,
+        shopId: shop?.id ?? null,
+        active,
+        detailId,
+        supplier,
+      },
+      "",
+    );
+    setContentFading(true);
+    setTimeout(() => {
+      setSupplierName(supplier);
+      setContentFading(false);
+    }, 200);
+  };
+
+  const closeSupplier = () => {
     window.history.back();
   };
 
@@ -123,12 +154,15 @@ export default function Home() {
     const savedDetailId = localStorage.getItem("talli.detailId");
     const restoredDetailId = savedDetailId ? Number(savedDetailId) : null;
     if (restoredDetailId != null) setDetailId(restoredDetailId);
+    const savedSupplier = localStorage.getItem("talli.supplier");
+    if (savedSupplier) setSupplierName(savedSupplier);
     window.history.replaceState(
       {
         ...window.history.state,
         shopId: restored?.id ?? null,
         active: savedActive,
         detailId: restoredDetailId,
+        supplier: savedSupplier ?? null,
       },
       "",
     );
@@ -138,6 +172,7 @@ export default function Home() {
         shopId: number | null;
         active: string;
         detailId?: number | null;
+        supplier?: string | null;
       } | null;
       if (!st || typeof st.active !== "string") return;
       setContentFading(true);
@@ -149,6 +184,7 @@ export default function Home() {
         );
         setActive(st.active);
         setDetailId(st.detailId ?? null);
+        setSupplierName(st.supplier ?? null);
         setContentFading(false);
       }, 200);
     };
@@ -174,6 +210,11 @@ export default function Home() {
     if (detailId != null) localStorage.setItem("talli.detailId", String(detailId));
     else localStorage.removeItem("talli.detailId");
   }, [detailId]);
+
+  useEffect(() => {
+    if (supplierName) localStorage.setItem("talli.supplier", supplierName);
+    else localStorage.removeItem("talli.supplier");
+  }, [supplierName]);
 
   const detailProduct =
     detailId != null
@@ -288,7 +329,14 @@ export default function Home() {
               </div>
             </div>
           ) : active === "Inventory" ? (
-            detailProduct ? (
+            supplierName ? (
+              <SupplierDetail
+                supplier={supplierName}
+                products={products}
+                onBack={closeSupplier}
+                onItemClick={openDetail}
+              />
+            ) : detailProduct ? (
               <ProductDetail
                 product={detailProduct}
                 onBack={closeDetail}
@@ -301,6 +349,7 @@ export default function Home() {
                   setProducts((prev) => prev.filter((x) => x.id !== id));
                   closeDetail();
                 }}
+                onSupplierClick={openSupplier}
               />
             ) : (
               <InventoryPage

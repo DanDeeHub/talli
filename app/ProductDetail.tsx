@@ -16,6 +16,7 @@ import {
 } from "./inventory";
 import {
   ChevronLeftIcon,
+  ChevronRightIcon,
   ChevronDownIcon,
   EditIcon,
   PlusIcon,
@@ -86,11 +87,13 @@ export default function ProductDetail({
   onBack,
   onSave,
   onDelete,
+  onSupplierClick,
 }: {
   product: Product;
   onBack: () => void;
   onSave: (product: Product) => void;
   onDelete: (id: number) => void;
+  onSupplierClick: (supplier: string) => void;
 }) {
   const RowIcon = product.Icon ?? fallbackIcon;
   const totalValue = priceNum(product.price) * product.stock;
@@ -186,9 +189,20 @@ export default function ProductDetail({
     setEditing(false);
   };
 
-  const details: { label: string; value: string; suffix?: string }[] = [
+  const details: {
+    label: string;
+    value: string;
+    suffix?: string;
+    onClick?: () => void;
+  }[] = [
     { label: "Category", value: product.category },
-    { label: "Supplier", value: product.supplier ?? "—" },
+    {
+      label: "Supplier",
+      value: product.supplier ?? "—",
+      onClick: product.supplier
+        ? () => onSupplierClick(product.supplier!)
+        : undefined,
+    },
     { label: "Quantity", value: `${product.stock} ${product.unit}` },
     { label: "Unit price", value: product.price, suffix: `per ${product.unit}` },
     {
@@ -253,15 +267,25 @@ export default function ProductDetail({
                   <p className="text-xs font-medium uppercase tracking-wide text-neutral-400">
                     {d.label}
                   </p>
-                  <p className="mt-1 text-sm font-medium text-neutral-900">
-                    {d.value}
-                    {d.suffix && (
-                      <span className="font-normal text-neutral-400">
-                        {" "}
-                        {d.suffix}
-                      </span>
-                    )}
-                  </p>
+                  {d.onClick ? (
+                    <button
+                      onClick={d.onClick}
+                      className="mt-1 inline-flex max-w-full cursor-pointer items-center gap-1 text-sm font-medium text-primary transition-colors hover:text-primary/70"
+                    >
+                      <span className="truncate">{d.value}</span>
+                      <ChevronRightIcon className="h-3.5 w-3.5 shrink-0" />
+                    </button>
+                  ) : (
+                    <p className="mt-1 text-sm font-medium text-neutral-900">
+                      {d.value}
+                      {d.suffix && (
+                        <span className="font-normal text-neutral-400">
+                          {" "}
+                          {d.suffix}
+                        </span>
+                      )}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>
